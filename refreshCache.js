@@ -7,8 +7,8 @@ var locations = ["cary", "earhart", "harrison", "hawkins", "hillenbrand", "mccut
 
 
 function updateCache(redis,logger){
+  logger.info({type:'refresh'});
   locations.map(function(location){
-    //logger.info({type:'refresh',refreshLocation:location});
     url = getURL(location);
     url = url.charAt(0).toUpperCase() + url.slice(1);
     grabHTML(url)
@@ -34,7 +34,6 @@ function grabHTML(url){
 
 
 function refreshCache(redis,logger){
-  logger.info({type:'refresh'});
   setInterval(function(){
     updateCache(redis,logger);
   },60000);
