@@ -34,6 +34,7 @@ function grabHTML(url){
 
 
 function refreshCache(redis,logger){
+  logger.info({type:'refresh'});
   setInterval(function(){
     updateCache(redis,logger);
   },60000);
