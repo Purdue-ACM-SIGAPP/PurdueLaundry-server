@@ -45,10 +45,21 @@ function getAllMachines(req){
 
 
 function getAllRoute(req,res){
-  getAllMachines(req)
-    .then(function(machines){
-      res.json(machines);
-    });
+  req.redis.exists('all',function(err,exists){
+    if(exists == 0){
+      getAllMachines(req)
+        .then(function(machines){
+          req.redis.set('all',JSON.stringify(machines));
+          req.redis.expire('all',60);
+          res.json(machines);
+        });
+    } else {
+      req.redis.get('all',function(err,result){
+        var machines = JSON.parse(result);
+        res.json(machines);
+      });
+    }
+  });
 }
 
 module.exports = getAllRoute;
