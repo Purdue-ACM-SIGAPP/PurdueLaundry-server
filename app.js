@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var redis = require("redis");
-var client = redis.createClient(6379,"ec2-52-37-183-17.us-west-2.compute.amazonaws.com");
+var client = redis.createClient(6379,"ec2-52-27-152-61.us-west-2.compute.amazonaws.com");
 var refreshCache = require('./refreshCache');
 
 var StatsD = require('dogstatsd-node').StatsD,
