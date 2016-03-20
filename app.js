@@ -1,11 +1,16 @@
 var express = require('express');
 var app = express();
 var redis = require("redis");
-var client = redis.createClient(6379,"ec2-52-37-183-17.us-west-2.compute.amazonaws.com");
+var redisOptions = {
+  host:'ec2-52-27-152-61.us-west-2.compute.amazonaws.com',
+  port:6379,
+  total_retry_time:300000
+};
+var client = redis.createClient(redisOptions);
 var refreshCache = require('./refreshCache');
 
 var StatsD = require('dogstatsd-node').StatsD,
-    stats = new StatsD("ec2-52-37-183-17.us-west-2.compute.amazonaws.com",8126);
+    stats = new StatsD("ec2-52-27-152-61.us-west-2.compute.amazonaws.com",8126);
 
 var log4js = require('log4js');
 log4js.configure({

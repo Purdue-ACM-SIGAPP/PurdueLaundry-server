@@ -45,6 +45,7 @@ function getAllMachines(req){
 
 
 function getAllRoute(req,res){
+  console.time("allStart");
   req.redis.exists('all',function(err,exists){
     if(exists == 0){
       getAllMachines(req)
@@ -55,6 +56,7 @@ function getAllRoute(req,res){
         });
     } else {
       req.redis.get('all',function(err,result){
+        console.timeEnd("allStart");
         var machines = JSON.parse(result);
         res.json(machines);
       });
