@@ -3,7 +3,6 @@ var getURL = require('./get_url')
 var parseHTML = require('./parse_html')
 
 module.exports = function(req, res){
-	req.stats.increment(req.params.location).send();
 	req.logger.info({type:'GET', location:req.params.location});
 	url = getURL(req.params.location);
 	url = capitalizeFirstLetter(url);

@@ -9,9 +9,6 @@ var redisOptions = {
 var client = redis.createClient(redisOptions);
 var refreshCache = require('./refreshCache');
 
-var StatsD = require('dogstatsd-node').StatsD,
-    stats = new StatsD("ec2-52-27-152-61.us-west-2.compute.amazonaws.com",8126);
-
 var log4js = require('log4js');
 log4js.configure({
   'appenders': [
@@ -49,7 +46,7 @@ app.set('port', (process.env.PORT || 5000));
 app.use(function(req,res,next){
     req.redis = client;
     req.logger = logger;
-    req.stats = stats;
+    //req.stats = stats;
     next();
 });
 
