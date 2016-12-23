@@ -3,7 +3,7 @@ MAINTAINER Armagan Amcalar "armagan@amcalar.com"
 
 RUN npm install -g pm2@latest
 RUN git clone https://github.com/Purdue-ACM-SIGAPP/purdue-laundry-api.git
-
+RUN git checkout deploying
 WORKDIR /purdue-laundry-api
 
 RUN npm install
