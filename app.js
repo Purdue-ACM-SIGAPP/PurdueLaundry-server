@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var redis = require("redis");
 var redisOptions = {
-  host:'ec2-52-27-152-61.us-west-2.compute.amazonaws.com',
+  host:'redis',
   port:6379,
   total_retry_time:300000
 };
@@ -58,4 +58,5 @@ app.get('/Laundry/status', require('./routes/Laundry/get_status'))
 app.get('/Laundry/v2/demo', require('./routes/Laundry/get_demo'))
 app.get('/Laundry/:location', require('./routes/Laundry/get_info'))
 app.get('/Laundry/location/all', require('./routes/Laundry/get_all'))
+app.get('/foobar', require('./routes/Laundry/get_all'))
 app.get('/Laundry/v2/:location', require('./routes/Laundry/get_test')) //this should be changed from the 'v2' as it is NOT a v2
