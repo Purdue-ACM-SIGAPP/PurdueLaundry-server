@@ -58,5 +58,7 @@ app.get('/Laundry/status', require('./routes/Laundry/get_status'))
 app.get('/Laundry/v2/demo', require('./routes/Laundry/get_demo'))
 app.get('/Laundry/:location', require('./routes/Laundry/get_info'))
 app.get('/Laundry/location/all', require('./routes/Laundry/get_all'))
-app.get('/foobar', require('./routes/Laundry/get_all'))
 app.get('/Laundry/v2/:location', require('./routes/Laundry/get_test')) //this should be changed from the 'v2' as it is NOT a v2
+
+app.get('/v1/:location', require('./routes/Laundry/get_info'))
+app.get('/v1/location/all', require('./routes/Laundry/get_all'))
