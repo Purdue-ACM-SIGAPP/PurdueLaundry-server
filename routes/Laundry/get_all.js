@@ -13,21 +13,21 @@ function getAllMachines(req) {
       req.redis.exists(location, function (err, exists) {
         if (err) {
           req.logger.err('Redis error- ' + err);
-          throw err;
-          return; 
+          return reject(err);
         }
         if (exists == 0) {
           url = getURL(location);
           url = url.charAt(0).toUpperCase() + url.slice(1);
           request(url, function (err, response, body) {
+            if(err) return reject(err); 
             var results = [];
-            if (!err && response.statusCode == 200) {
+            if (response.statusCode == 200) {
               results = parseHTML(body);
               machines[location] = results;
               req.redis.set(location, JSON.stringify(results));
               req.redis.expire(location, 60);
               if (Object.keys(machines).length === locations.length) {
-                resolve(machines);
+                return resolve(machines);
               }
             }
           });
@@ -35,11 +35,11 @@ function getAllMachines(req) {
           req.redis.get(location, function (err, result) {
             if (err) {
               req.logger.err('Redis Error- ' + err);
-              throw err;
+              return reject(err);
             }
             machines[location] = JSON.parse(result);
             if (Object.keys(machines).length === locations.length) {
-              resolve(machines);
+              return resolve(machines);
             }
           })
         }
@@ -50,7 +50,7 @@ function getAllMachines(req) {
 
 
 function getAllRoute(req, res) {
-  console.time("allStart");
+  console.time("allStart" + req.id);
   req.redis.exists('all', function (err, exists) {
     if (err) throw err;
     if (exists == 0) {
@@ -58,12 +58,15 @@ function getAllRoute(req, res) {
         .then(function (machines) {
           req.redis.set('all', JSON.stringify(machines));
           req.redis.expire('all', 60);
+          console.timeEnd("allStart");
           res.json(machines);
+        }, function(err) {
+          res.send({ status: "FAIL", reason: "The app failed with an error.", err: err})
         });
     } else {
       req.redis.get('all', function (err, result) {
-        console.timeEnd("allStart");
         var machines = JSON.parse(result);
+        console.timeEnd("allStart" + req.id);
         res.json(machines);
       });
     }

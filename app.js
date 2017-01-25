@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var redis = require("redis");
+var addRequestId = require('express-request-id')();
 var redisOptions = {
   host:'ec2-52-27-152-61.us-west-2.compute.amazonaws.com',
   port:6379,
@@ -50,7 +51,7 @@ app.use(function(req,res,next){
     next();
 });
 
-
+app.use(addRequestId);
 
 //LAUNDRY OPTIONS
 app.get('/Laundry/test', require('./routes/Laundry/get_test'))
