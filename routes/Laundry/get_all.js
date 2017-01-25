@@ -13,6 +13,7 @@ function getAllMachines(req){
     req.redis.exists(location, function(err,exists){
         if(err){
           req.logger.err('Redis error- ' + err);
+          throw err; 
         }
         if(exists == 0 ){
           url = getURL(location);
@@ -31,7 +32,10 @@ function getAllMachines(req){
           });
         } else {
           req.redis.get(location, function(err,result){
-            if(err) req.logger.err('Redis Error- ' + err);
+            if(err) {
+              req.logger.err('Redis Error- ' + err);
+              throw err; 
+            }
             machines[location] = JSON.parse(result);
             if(Object.keys(machines).length === locations.length){
               resolve(machines);
@@ -47,6 +51,7 @@ function getAllMachines(req){
 function getAllRoute(req,res){
   console.time("allStart");
   req.redis.exists('all',function(err,exists){
+    if (err) throw err; 
     if(exists == 0){
       getAllMachines(req)
         .then(function(machines){
