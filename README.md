@@ -32,4 +32,4 @@ Deploying is currently managed by Sigapp officers and hosted on an AWS EC2 insta
 ## License
 
 This API is licensed under GPLv3. 
->>>>>>> dev
+
