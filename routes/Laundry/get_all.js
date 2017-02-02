@@ -8,6 +8,7 @@ var locations = ["cary", "earhart", "harrison", "hawkins", "hillenbrand", "mccut
 function getAllMachines(req) {
   req.logger.info({ type: 'GET', location: 'all' })
   return new Promise(function (resolve, reject) {
+    
     var machines = {}
     locations.map(function (location) {
       req.redis.exists(location, function (err, exists) {
@@ -28,6 +29,8 @@ function getAllMachines(req) {
               req.redis.expire(location, 60);
               if (Object.keys(machines).length === locations.length) {
                 return resolve(machines);
+              } else {
+                return reject(new Error("Not all machines were properly saved or returned.")); 
               }
             }
           });
@@ -52,7 +55,7 @@ function getAllMachines(req) {
 function getAllRoute(req, res) {
   console.time("allStart" + req.id);
   req.redis.exists('all', function (err, exists) {
-    if (err) res.status(500).send({ status: "FAIL", reason: "The app failed with an error.", err: err});
+    if (err) return res.status(500).send({ status: "FAIL", reason: "The app failed with an error.", err: err});
     if (exists == 0) {
       getAllMachines(req)
         .then(function (machines) {
@@ -66,7 +69,7 @@ function getAllRoute(req, res) {
     } else {
       req.redis.get('all', function (err, result) {
         console.timeEnd("allStart" + req.id);
-        if(err) res.status(500).send({ status: "FAIL", reason: "The app failed with an error.", err: err});
+        if(err) return res.status(500).send({ status: "FAIL", reason: "The app failed with an error.", err: err});
         var machines = JSON.parse(result);
         res.json(machines);
       });
