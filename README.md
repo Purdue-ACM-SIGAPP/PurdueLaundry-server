@@ -2,6 +2,16 @@
 
 Backend for the Purdue Laundry application. It scrapes data from the Purdue Laundry alert page and provides a nice API for accessing it from the app. 
 
+# Running the API
+
+Any change to the code will likely require the following command. This requires having docker and docker-compose installed. Installation instructions for those tools will be added soon. 
+
+`$ docker-compose build`
+
+After building the code, the following will start the redis and docker containers necessary. 
+
+`$ docker-compose up`
+
 
 ## Contributing
 
@@ -22,3 +32,4 @@ Deploying is currently managed by Sigapp officers and hosted on an AWS EC2 insta
 ## License
 
 This API is licensed under GPLv3. 
+
