@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var redis = require("redis");
+var addRequestId = require('express-request-id')();
 var redisOptions = {
   host:'redis',
   port:6379,
@@ -33,12 +34,18 @@ client.on("error",function(err){
   logger.error('redis error - ' + err);
 });
 
+var isStarted = false; 
+
 client.on('connect', function(connect){
   logger.info('redis connected');
-  var server = app.listen(app.get('port'), function () {
-    logger.info('Application listening on port', app.get('port'));
-    refreshCache(client,logger);
-  });
+
+  if(!isStarted) {
+    var server = app.listen(app.get('port'), function () {
+      isStarted = true; 
+      logger.info('Application listening on port', app.get('port'));
+      refreshCache(client,logger);
+    });
+  }
 });
 
 
@@ -50,7 +57,7 @@ app.use(function(req,res,next){
     next();
 });
 
-
+app.use(addRequestId);
 
 //LAUNDRY OPTIONS
 app.get('/Laundry/test', require('./routes/Laundry/get_test'))
