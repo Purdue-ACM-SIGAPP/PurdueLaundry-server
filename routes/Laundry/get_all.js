@@ -1,9 +1,7 @@
 const parseHTML = require('./parse_html');
 const getURL = require('./get_url');
+const locations = require('./get_locations')().map(e => e.name); // TODO: Fix rest of the code
 const request = require('request');
-
-let locations = ["cary", "earhart", "harrison", "hawkins", "hillenbrand", "mccutcheon", "meredith_nw", "meredith_se",
-	"owen", "shreve", "tarkington", "third", "wiley", "windsor_duhme", "windsor_warren"];
 
 function getAllMachines(req) {
 	req.logger.info({type: 'GET', location: 'all'});
