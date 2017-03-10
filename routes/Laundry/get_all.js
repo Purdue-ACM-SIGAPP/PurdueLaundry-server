@@ -1,24 +1,24 @@
-var parseHTML = require('./parse_html');
-var getURL = require('./get_url');
-var request = require('request');
+const parseHTML = require('./parse_html');
+const getURL = require('./get_url');
+const request = require('request');
 
-var locations = ["cary", "earhart", "harrison", "hawkins", "hillenbrand", "mccutcheon", "meredith_nw", "meredith_se",
+let locations = ["cary", "earhart", "harrison", "hawkins", "hillenbrand", "mccutcheon", "meredith_nw", "meredith_se",
 	"owen", "shreve", "tarkington", "third", "wiley", "windsor_duhme", "windsor_warren"];
 
 function getAllMachines(req) {
 	req.logger.info({type: 'GET', location: 'all'});
 	return new Promise(function (resolve, reject) {
-		var machines = {};
+		let machines = {};
 		locations.map(function (location) {
 			req.redis.exists(location, function (err, exists) {
 				if (err) {
 					req.logger.err('Redis error- ' + err);
 				}
 				if (exists == 0) {
-					url = getURL(location);
+					let url = getURL(location);
 					url = url.charAt(0).toUpperCase() + url.slice(1);
 					request(url, function (err, response, body) {
-						var results = [];
+						let results = [];
 						if (!err && response.statusCode == 200) {
 							results = parseHTML(body);
 							machines[location] = results;
@@ -57,7 +57,7 @@ function getAllRoute(req, res) {
 		} else {
 			req.redis.get('all', function (err, result) {
 				console.timeEnd("allStart");
-				var machines = JSON.parse(result);
+				let machines = JSON.parse(result);
 				res.json(machines);
 			});
 		}
