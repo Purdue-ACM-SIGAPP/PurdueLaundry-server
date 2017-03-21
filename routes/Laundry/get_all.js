@@ -7,7 +7,7 @@ function getAllMachines(req) {
 	req.logger.info({type: 'GET', location: 'all'});
 	return new Promise(function (resolve, reject) {
 		let machines = {};
-		locations.map(function (location) {
+		locations.forEach(location => {
 			req.redis.exists(location, function (err, exists) {
 				if (err) {
 					req.logger.err('Redis error- ' + err);

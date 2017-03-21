@@ -4,7 +4,7 @@ const request = require('request');
 module.exports = function getLocations() {
 	const url = "http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx";
 	request.get(url).on('response', r => {
-		$ = cheerio.load(r.body);
+		let $ = cheerio.load(r.body);
 		return $('option').map(e => {
 			return {
 				"name": e.innerText,
