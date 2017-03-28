@@ -10,13 +10,13 @@ function updateCache(redis, logger) {
 		let url = location.url.charAt(0).toUpperCase() + location.url.slice(1);
 		grabHTML(url)
 			.then(function (results) {
-				machines[location] = results;
+				machines[location.name] = results;
 				if (Object.keys(machines).length === locations.length) {
 					redis.set('all', JSON.stringify(machines));
 					redis.expire('all', 60);
 				}
-				redis.set(location, JSON.stringify(results));
-				redis.expire(location, 60);
+				redis.set(location.name, JSON.stringify(results));
+				redis.expire(location.name, 60);
 			});
 	}));
 }
