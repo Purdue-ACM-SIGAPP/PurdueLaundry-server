@@ -11,12 +11,12 @@ function getAllMachines(req) {
 				if (err) {
 					req.logger.err('Redis error- ' + err);
 				}
-				if (exists == 0) {
+				if (exists === 0) {
 					let url = location.url;
 					url = url.charAt(0).toUpperCase() + url.slice(1);
 					request(url, function (err, response, body) {
 						let results = [];
-						if (!err && response.statusCode == 200) {
+						if (!err && response.statusCode === 200) {
 							results = parseHTML(body);
 							machines[location.name] = results;
 							req.redis.set(location.name, JSON.stringify(results));
@@ -45,7 +45,7 @@ function getAllMachines(req) {
 function getAllRoute(req, res) {
 	console.time("allStart");
 	req.redis.exists('all', function (err, exists) {
-		if (exists == 0) {
+		if (exists === 0) {
 			getAllMachines(req)
 				.then(function (machines) {
 					req.redis.set('all', JSON.stringify(machines));

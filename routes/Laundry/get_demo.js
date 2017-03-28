@@ -47,13 +47,13 @@ function getMachineTime() {
 }
 
 function getMachineStatus(time) {
-	if (time == " ") {
+	if (time === " ") {
 		return "Available"
 	} else if (time < 5) {
 		return "Almost Done"
-	} else if (time == " ") {
+	} else if (time === " ") {
 		return "Available";
-	} else if (time == "0 minutes left") {
+	} else if (time === "0 minutes left") {
 		return "End of cycle"
 	} else {
 		return "In use";
