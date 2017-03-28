@@ -8,14 +8,13 @@ module.exports = function getLocations() {
 			if (error) reject(error);
 
 			let $ = cheerio.load(html);
-			let map = Array.from($('#locationSelector > option')).map(e => {
+			let locations = Array.from($('#locationSelector > option')).map(e => {
 				return {
 					"name": e.children[0].data,
 					"url": url + "?location=" + e.attribs.value
 				};
 			});
-			console.log(map);
-			resolve(map);
+			resolve(locations);
 		});
 	});
 };
