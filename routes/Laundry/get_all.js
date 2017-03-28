@@ -1,43 +1,43 @@
 const parseHTML = require('./parse_html');
-const getURL = require('./get_url');
-const locations = require('./get_locations')().map(e => e.name); // TODO: Fix rest of the code
+const getLocations = require('./get_locations');
 const request = require('request');
 
 function getAllMachines(req) {
 	req.logger.info({type: 'GET', location: 'all'});
 	return new Promise(function (resolve, reject) {
 		let machines = {};
-		locations.forEach(location => {
-			req.redis.exists(location, function (err, exists) {
+		getLocations().then(locations => locations.forEach(location => {
+			req.redis.exists(location.name, function (err, exists) {
 				if (err) {
 					req.logger.err('Redis error- ' + err);
 				}
 				if (exists == 0) {
-					let url = getURL(location);
+					let url = location.url;
 					url = url.charAt(0).toUpperCase() + url.slice(1);
 					request(url, function (err, response, body) {
 						let results = [];
 						if (!err && response.statusCode == 200) {
 							results = parseHTML(body);
-							machines[location] = results;
-							req.redis.set(location, JSON.stringify(results));
-							req.redis.expire(location, 60);
+							machines[location.name] = results;
+							req.redis.set(location.name, JSON.stringify(results));
+							req.redis.expire(location.name, 60);
 							if (Object.keys(machines).length === locations.length) {
 								resolve(machines);
 							}
 						}
 					});
 				} else {
-					req.redis.get(location, function (err, result) {
+					req.redis.get(location.name, function (err, result) {
 						if (err) req.logger.err('Redis Error- ' + err);
-						machines[location] = JSON.parse(result);
+						machines[location.name] = JSON.parse(result);
 						if (Object.keys(machines).length === locations.length) {
 							resolve(machines);
 						}
 					})
 				}
 			});
-		});
+		}))
+			.catch(console.error);
 	});
 }
 

@@ -20,7 +20,6 @@ module.exports = function (req, res) {
 
 function createNewMachines(number, type) {
 	let name = type + " " + number;
-	let type = type;
 	let time = getMachineTime();
 	let status = getMachineStatus(time);
 	return new Machine(name, type, status, time);

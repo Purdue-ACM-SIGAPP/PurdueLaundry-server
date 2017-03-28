@@ -3,15 +3,19 @@ const request = require('request');
 
 module.exports = function getLocations() {
 	const url = "http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx";
-	request.get(url).on('response', r => {
-		let $ = cheerio.load(r.body);
-		return $('option').map(e => {
-			return {
-				"name": e.innerText,
-				"url": url + "?location=" + e.value
-			};
+	return new Promise(function(resolve, reject) {
+		request(url, (error, response, html) => {
+			if (error) reject(error);
+
+			let $ = cheerio.load(html);
+			let map = Array.from($('#locationSelector > option')).map(e => {
+				return {
+					"name": e.children[0].data,
+					"url": url + "?location=" + e.attribs.value
+				};
+			});
+			console.log(map);
+			resolve(map);
 		});
-	}).on('error', e => {
-		return e;
 	});
 };
