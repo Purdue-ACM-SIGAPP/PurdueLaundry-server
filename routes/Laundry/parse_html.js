@@ -15,7 +15,7 @@ module.exports = function(body){
 			return;
 		}
 		$(this).map(function(j, child){
-			var name = $('.name', this).text();
+			var name = $('.name', this).text().replace(/0+([1-9]+)/, "$1");
 			var type = $('.type', this).text();
 			var status = $('.status', this).text();
 			var time = $('.time', this).text();
