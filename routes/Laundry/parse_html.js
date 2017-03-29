@@ -1,7 +1,8 @@
 var cheerio = require('cheerio')
 
-function Machine(name, type, status, time){
+function Machine(name, displayName, type, status, time){
 	this.name = name;
+	this.displayName = displayName;
 	this.type = type;
 	this.status = status;
 	this.time = time;
@@ -15,12 +16,13 @@ module.exports = function(body){
 			return;
 		}
 		$(this).map(function(j, child){
-			var name = $('.name', this).text().replace(/0+([1-9]+)/, "$1");
+			var name = $('.name', this);
+			let displayName = $('.name', this).text().replace(/0+([1-9]+)/, "$1");
 			var type = $('.type', this).text();
 			var status = $('.status', this).text();
 			var time = $('.time', this).text();
 			if ( type != '' ){
-				results.push(new Machine(name, type, status, time));
+				results.push(new Machine(name, displayName, type, status, time));
 			}
 				
 		});
