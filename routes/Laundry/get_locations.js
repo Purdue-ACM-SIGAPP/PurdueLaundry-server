@@ -1,7 +1,7 @@
 const cheerio = require('cheerio');
 const request = require('request');
 
-module.exports = function getLocations() {
+module.exports = function getLocationURLs() {
 	const url = "http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx";
 	return new Promise(function (resolve, reject) {
 		request(url, (error, response, html) => {
