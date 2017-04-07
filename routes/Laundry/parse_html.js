@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 
-function Machine(name, displayName, type, status, time){
+function Machine(name, displayName, type, status, time) {
 	this.name = name;
 	this.displayName = displayName;
 	this.type = type;
@@ -10,21 +10,19 @@ function Machine(name, displayName, type, status, time){
 
 module.exports = function (body) {
 	let results = [];
-	$ = cheerio.load(body);
-	$('tr').map(function (i, el) {
-		if ($(this).attr('class') === '') {
+	let $ = cheerio.load(body);
+	$('tr').forEach(function (machine) {
+		if (machine.class === '') {
 			return;
 		}
-    
-		$(this).map(function(j, child){
-			let name = $('.name', this);
-			let displayName = $('.name', this).text().replace(/0+([1-9]+)/, "$1");
-			let type = $('.type', this).text();
-			let status = $('.status', this).text();
-			let time = $('.time', this).text();
-      
-			if (type !== '') results.push(new Machine(name, displayName, type, status, time));
-		});
+		
+		let name = $('.name', machine);
+		let displayName = $('.name', machine).text().replace(/0+([1-9]+)/, '$1');
+		let type = $('.type', machine).text();
+		let status = $('.status', machine).text();
+		let time = $('.time', machine).text();
+
+		if (type !== '') results.push(new Machine(name, displayName, type, status, time));
 	});
 	return results;
 };

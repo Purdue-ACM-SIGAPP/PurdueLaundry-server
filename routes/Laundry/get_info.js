@@ -4,11 +4,11 @@ const parseHTML = require('./parse_html');
 
 module.exports = function (req, res) {
 	req.logger.info({type: 'GET', location: req.params.location});
-	getURL(req.params.location).then(function (u) {
+	getURL(req.params.location, req).then(function (u) {
 		let url = capitalizeFirstLetter(u);
 		if (url === undefined) {
-			req.logger.err("Incorrect URL");
-			res.status(404).send("Error");
+			req.logger.err('Incorrect URL');
+			res.status(404).send('Error');
 			return;
 		}
 
@@ -32,7 +32,7 @@ module.exports = function (req, res) {
 					if (err) req.logger.err('Redis Error- ' + err);
 					let oldResponse = JSON.parse(result);
 					res.json(oldResponse);
-				})
+				});
 			}
 		});
 	});

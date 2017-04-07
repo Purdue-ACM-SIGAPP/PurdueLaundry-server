@@ -1,8 +1,8 @@
 const cheerio = require('cheerio');
 const request = require('request');
 
-module.exports = function getLocationURLs() {
-	const url = "http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx";
+module.exports = function getLocationURLs(req) {
+	const url = 'http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx';
 	return new Promise(function (resolve, reject) {
 		req.redis.get('location-urls', function (err, result) {
 			if (err) reject(err);
@@ -14,8 +14,8 @@ module.exports = function getLocationURLs() {
 					let $ = cheerio.load(html);
 					let locations = Array.from($('#locationSelector > option')).map(e => {
 						return {
-							"name": e.children[0].data,
-							"url": url + "?location=" + e.attribs.value
+							'name': e.children[0].data,
+							'url': url + '?location=' + e.attribs.value
 						};
 					});
 
