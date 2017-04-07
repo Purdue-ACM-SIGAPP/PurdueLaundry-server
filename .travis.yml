@@ -1,4 +1,6 @@
 language: javascript
-before_install: sudo apt-get update npm node
+before_install:
+	- curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash
+	- nvm install v4.2.6
 install: npm install
 script: node_modules/.bin/eslint routes/* app.js
