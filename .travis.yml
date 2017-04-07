@@ -1,3 +1,4 @@
 language: javascript
+before_install: sudo apt-get update npm node
 install: npm install
 script: node_modules/.bin/eslint routes/* app.js
