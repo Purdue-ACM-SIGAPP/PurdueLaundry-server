@@ -1,3 +1,3 @@
 language: javascript
 install: npm install
-script: ls && eslint routes/**/*.js app.js
+script: eslint routes/* app.js
