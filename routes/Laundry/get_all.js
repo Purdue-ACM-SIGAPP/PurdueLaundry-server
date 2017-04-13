@@ -4,9 +4,9 @@ const request = require('request');
 
 function getAllMachines(req) {
 	req.logger.info({type: 'GET', location: 'all'});
-	return new Promise(function (resolve, reject) {
+	return new Promise(function (resolve) {
 		let machines = {};
-		getLocations().then(locations => locations.forEach(location => {
+		getLocations(req).then(locations => locations.forEach(location => {
 			req.redis.exists(location.name, function (err, exists) {
 				if (err) {
 					req.logger.err('Redis error- ' + err);
@@ -33,7 +33,7 @@ function getAllMachines(req) {
 						if (Object.keys(machines).length === locations.length) {
 							resolve(machines);
 						}
-					})
+					});
 				}
 			});
 		}))
@@ -43,7 +43,7 @@ function getAllMachines(req) {
 
 
 function getAllRoute(req, res) {
-	console.time("allStart");
+	console.time('allStart');
 	req.redis.exists('all', function (err, exists) {
 		if (exists === 0) {
 			getAllMachines(req)
@@ -54,7 +54,7 @@ function getAllRoute(req, res) {
 				});
 		} else {
 			req.redis.get('all', function (err, result) {
-				console.timeEnd("allStart");
+				console.timeEnd('allStart');
 				let machines = JSON.parse(result);
 				res.json(machines);
 			});

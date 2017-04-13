@@ -23,7 +23,7 @@ function updateCache(redis, logger) {
 
 
 function grabHTML(url) {
-	return new Promise(function (resolve, reject) {
+	return new Promise(function (resolve) {
 		request(url, function (err, response, body) {
 			let results = [];
 			if (!err && response.statusCode === 200) {

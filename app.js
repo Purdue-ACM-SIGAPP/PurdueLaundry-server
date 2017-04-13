@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const redis = require("redis");
+const redis = require('redis');
 const redisOptions = {
 	host: 'redis',
 	port: 6379,
@@ -29,13 +29,13 @@ log4js.configure({
 
 const logger = log4js.getLogger('purdue-laundry');
 
-client.on("error", function (err) {
+client.on('error', function (err) {
 	logger.error('redis error - ' + err);
 });
 
-client.on('connect', function (connect) {
+client.on('connect', function () {
 	logger.info('redis connected');
-	let server = app.listen(app.get('port'), function () {
+	app.listen(app.get('port'), function () {
 		logger.info('Application listening on port', app.get('port'));
 		refreshCache(client, logger);
 	});
