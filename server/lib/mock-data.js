@@ -1,4 +1,4 @@
-const Machine = require('./Machine');
+const Machine = require('../classes/Machine');
 
 function createNewMachines(number, type) {
 	let name = type + ' ' + number;

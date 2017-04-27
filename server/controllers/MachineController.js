@@ -1,34 +1,13 @@
-const request = require('request');
-const getURL = require('../lib/scraper').getUrlFor;
-const getLocations = require('../lib/scraper').scrapeLocations;
-const parseHTML = require('../lib/Machine').parse;
-const Redis = require('../lib/Redis');
+// TODO: Add a catch block *somewhere*
+
+const {scrapeAllMachines, scrapeMachinesAt, getUrlFor} = require('../lib/scraper');
+const Redis = require('../classes/Redis');
 
 async function getAllMachines(req) {
 	req.logger.info({type: 'GET', location: 'all'});
 
 	const redis = new Redis(req.redis);
-	let machines = {};
-	let locations = await getLocations(req.redis);
-	for (let location of locations) {
-		let exists = await redis.exists(location.name);
-		// if (err) req.logger.err('Redis error- ' + err);
-
-		if (exists === 0) {
-			let url = capitalizeFirstLetter(location.url);
-			let body = await request(url);
-			let results = parseHTML(body);
-			machines[location.name] = results;
-			req.redis.set(location.name, JSON.stringify(results));
-			req.redis.expire(location.name, 60);
-		} else {
-			let result = await redis.get(location.name);
-			// if (err) req.logger.err('Redis Error- ' + err);
-			machines[location.name] = JSON.parse(result);
-		}
-	}
-
-	return machines;
+	return await scrapeAllMachines(redis);
 }
 
 async function getMachines(req, res) {
@@ -48,14 +27,9 @@ async function getMachines(req, res) {
 	}
 }
 
-function capitalizeFirstLetter(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 async function getMachinesAtLocation(req, res) {
 	req.logger.info({type: 'GET', location: req.params.location});
-	let u = await getURL(req.params.location, req);
-	let url = capitalizeFirstLetter(u);
+	let url = await getUrlFor(req.params.location, req);
 	if (url === undefined) {
 		req.logger.err('Incorrect URL');
 		res.status(404).send('Error');
@@ -64,19 +38,12 @@ async function getMachinesAtLocation(req, res) {
 
 	const redis = new Redis(req.redis);
 	let exists = await redis.exists(req.params.location);
-	// if (err) {
-	// 	req.logger.err('Redis error- ' + err);
-	// }
 
 	if (exists === 0) {
-		let body = await request(url);
-		let results = parseHTML(body);
-		req.redis.set(req.params.location, JSON.stringify(results));
-		req.redis.expire(req.params.location, 60);
+		let results = await scrapeMachinesAt(req.params.location, redis);
 		res.json(results);
 	} else {
 		let result = await redis.get(req.params.location);
-		// if (err) req.logger.err('Redis Error- ' + err);
 		res.json(JSON.parse(result));
 	}
 }
