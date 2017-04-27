@@ -29,10 +29,9 @@ If you are insterested in contributing to this repo, please assign an issue to y
 
 # Testing
 
-To run all tests, simply run either of the following commands
+To run all tests, simply run:
 
     $ npm test
-    $ jasmine
 
 A summary of the tests will be displayed in `stdout`. 
 

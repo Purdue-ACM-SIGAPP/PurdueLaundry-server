@@ -37,7 +37,7 @@ describe('Player', function() {
 		});
 	});
 
-  // demonstrates use of spies to intercept and spec method calls
+  // demonstrates use of spies to intercept and test method calls
 	it('tells the current song if the user has made it a favorite', function() {
 		spyOn(song, 'persistFavoriteStatus');
 

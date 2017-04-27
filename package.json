@@ -6,7 +6,7 @@
   "repository": "https://github.com/purdue-acm-sigapp",
   "scripts": {
     "start": "node app.js",
-    "test": "jasmine"
+    "test": "jasmine JASMINE_CONFIG_PATH=./jasmine.json"
   },
   "author": "Purdue ACM SigApp <acm@purdue.edu>",
   "license": "ISC",
