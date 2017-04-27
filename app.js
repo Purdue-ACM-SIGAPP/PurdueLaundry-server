@@ -1,5 +1,8 @@
+// Initialize Express
 const express = require('express');
 const app = express();
+
+// Initialize cache
 const redis = require('redis');
 const redisOptions = {
 	host: 'redis',
@@ -9,6 +12,16 @@ const redisOptions = {
 const client = redis.createClient(redisOptions);
 const refreshCache = require('./refreshCache');
 
+client.on('error', err => logger.error('redis error - ' + err));
+client.on('connect', () => {
+	logger.info('redis connected');
+	app.listen(app.get('port'), function () {
+		logger.info('Application listening on port', app.get('port'));
+		refreshCache(client, logger);
+	});
+});
+
+// Initialize logger
 const log4js = require('log4js');
 log4js.configure({
 	'appenders': [
@@ -26,32 +39,18 @@ log4js.configure({
 		},
 	]
 });
-
 const logger = log4js.getLogger('purdue-laundry');
 
-client.on('error', function (err) {
-	logger.error('redis error - ' + err);
-});
-
-client.on('connect', function () {
-	logger.info('redis connected');
-	app.listen(app.get('port'), function () {
-		logger.info('Application listening on port', app.get('port'));
-		refreshCache(client, logger);
-	});
-});
-
-
+// Set port
 app.set('port', (process.env.PORT || 5000));
-app.use(function (req, res, next) {
+
+// Provide caching and logging to controllers
+app.use((req, res, next) => {
 	req.redis = client;
 	req.logger = logger;
 	//req.stats = stats;
 	next();
 });
 
-
-//LAUNDRY OPTIONS
-app.get('/v1/status', require('./routes/Laundry/get_status'));
-app.get('/v1/location/all', require('./routes/Laundry/get_all'));
-app.get('/v1/location/:location', require('./routes/Laundry/get_info'));
+// Set up routes
+require('./server/routes')(app);

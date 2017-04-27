@@ -1,12 +1,12 @@
 const request = require('request');
-const parseHTML = require('./routes/Laundry/parse_html');
-const getLocations = require('./routes/Laundry/get_locations');
+const parseHTML = require('./server/lib/Machine').parse;
+const getLocations = require('./server/lib/scraper').scrapeLocations;
 
 
 function updateCache(redis, logger) {
 	logger.info({type: 'refresh'});
 	let machines = {};
-	getLocations().then(locations => locations.forEach(function (location) {
+	getLocations(redis).then(locations => locations.forEach(function (location) {
 		let url = location.url.charAt(0).toUpperCase() + location.url.slice(1);
 		grabHTML(url)
 			.then(function (results) {
@@ -36,9 +36,7 @@ function grabHTML(url) {
 
 
 function refreshCache(redis, logger) {
-	setInterval(function () {
-		updateCache(redis, logger);
-	}, 60000);
+	setInterval(() => updateCache(redis, logger), 60 * 1000);
 }
 
 
