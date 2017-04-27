@@ -1,35 +1,32 @@
 const cheerio = require('cheerio');
-const request = require('request');
+const request = require('request-promise');
+const Redis = require('../lib/Redis');
 
-function scrapeLocations(redis) {
+async function scrapeLocations(redisInstance) {
 	const url = 'http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx';
-	return new Promise(function (resolve, reject) {
-		redis.get('location-urls', function (err, result) {
-			if (err) reject(err);
-			if (result) resolve(JSON.parse(result));
-			else {
-				request(url, (error, response, html) => {
-					if (error) reject(error);
+	const redis = new Redis(redisInstance);
+	let urls = await redis.get('location-urls');
 
-					let $ = cheerio.load(html);
-					let locations = Array.from($('#locationSelector > option')).map(e => {
-						return {
-							'name': e.children[0].data,
-							'url': url + '?location=' + e.attribs.value
-						};
-					});
-
-					redis.set('location-urls', JSON.stringify(locations));
-					redis.expire('location-urls', 1000 * 60 * 60 * 24);
-					resolve(locations);
-				});
-			}
+	if (urls) return JSON.parse(urls);
+	else {
+		let html = await request(url);
+		let $ = cheerio.load(html);
+		let locations = Array.from($('#locationSelector').find('option')).map(e => {
+			return {
+				'name': e.children[0].data,
+				'url': url + '?location=' + e.attribs.value
+			};
 		});
-	});
+
+		redisInstance.set('location-urls', JSON.stringify(locations));
+		redisInstance.expire('location-urls', 1000 * 60 * 60 * 24);
+		return locations;
+	}
 }
 
-function getUrlFor(location, req) {
-	return scrapeLocations(req.redis).then(locations => locations.reduce((acc, item) => item.name === location ? item.url : ''));
+async function getUrlFor(location, req) {
+	let locations = await scrapeLocations(req.redis);
+	return locations.reduce((acc, item) => item.name === location ? item.url : '');
 }
 
 function scrapeMachines(redis) {

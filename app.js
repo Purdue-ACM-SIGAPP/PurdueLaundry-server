@@ -1,6 +1,7 @@
 // Initialize Express
 const express = require('express');
 const app = express();
+app.set('port', (process.env.PORT || 5000));
 
 // Initialize cache
 const redis = require('redis');
@@ -10,15 +11,11 @@ const redisOptions = {
 	total_retry_time: 300000
 };
 const client = redis.createClient(redisOptions);
-const refreshCache = require('./refreshCache');
 
 client.on('error', err => logger.error('redis error - ' + err));
 client.on('connect', () => {
 	logger.info('redis connected');
-	app.listen(app.get('port'), function () {
-		logger.info('Application listening on port', app.get('port'));
-		refreshCache(client, logger);
-	});
+	app.listen(app.get('port'), logger.info('Application listening on port', app.get('port')));
 });
 
 // Initialize logger
@@ -40,9 +37,6 @@ log4js.configure({
 	]
 });
 const logger = log4js.getLogger('purdue-laundry');
-
-// Set port
-app.set('port', (process.env.PORT || 5000));
 
 // Provide caching and logging to controllers
 app.use((req, res, next) => {

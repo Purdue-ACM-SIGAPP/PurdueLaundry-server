@@ -1,15 +1,10 @@
-function Machine(name, type, status, time) {
-	this.name = name;
-	this.type = type;
-	this.status = status;
-	this.time = time;
-}
+const Machine = require('./Machine');
 
 function createNewMachines(number, type) {
 	let name = type + ' ' + number;
 	let time = getMachineTime();
 	let status = getMachineStatus(time);
-	return new Machine(name, type, status, time);
+	return new Machine(name, name, type, status, time);
 }
 
 function getMachineTime() {
@@ -60,21 +55,21 @@ function comprehensiveData(req, res) {
 		machines.push(createNewMachines(i, 'Washer'));
 	}
 
-	machines.push(new Machine('Washer 5', 'Washer', 'Almost Done', '1 minute left'));
-	machines.push(new Machine('Washer 6', 'Washer', 'Available', ' '));
-	machines.push(new Machine('Washer 7', 'Washer', 'Almost Done', '4 minutes left'));
-	machines.push(new Machine('Washer 8', 'Washer', 'End of Cycle', '0 minutes left'));
-	machines.push(new Machine('Washer 9', 'Washer', 'In use', '18 minutes left'));
+	machines.push(new Machine('Washer 5', 'Washer 5', 'Washer', 'Almost Done', '1 minute left'));
+	machines.push(new Machine('Washer 6', 'Washer 6', 'Washer', 'Available', ' '));
+	machines.push(new Machine('Washer 7', 'Washer 7', 'Washer', 'Almost Done', '4 minutes left'));
+	machines.push(new Machine('Washer 8', 'Washer 8', 'Washer', 'End of Cycle', '0 minutes left'));
+	machines.push(new Machine('Washer 9', 'Washer 9', 'Washer', 'In use', '18 minutes left'));
 
 	for (let i = 0; i < numberOfDryers; i++) {
 		machines.push(createNewMachines(i, 'Dryer'));
 	}
 
-	machines.push(new Machine('Dryer 5', 'Dryer', 'Almost Done', '1 minute left'));
-	machines.push(new Machine('Dryer 6', 'Dryer', 'Available', ' '));
-	machines.push(new Machine('Dryer 7', 'Dryer', 'Almost Done', '5 minutes left'));
-	machines.push(new Machine('Dryer 8', 'Dryer', 'End of Cycle', '0 minutes left'));
-	machines.push(new Machine('Dryer 9', 'Dryer', 'In use', '32 minutes left'));
+	machines.push(new Machine('Dryer 5', 'Dryer 5', 'Dryer', 'Almost Done', '1 minute left'));
+	machines.push(new Machine('Dryer 6', 'Dryer 6', 'Dryer', 'Available', ' '));
+	machines.push(new Machine('Dryer 7', 'Dryer 7', 'Dryer', 'Almost Done', '5 minutes left'));
+	machines.push(new Machine('Dryer 8', 'Dryer 8', 'Dryer', 'End of Cycle', '0 minutes left'));
+	machines.push(new Machine('Dryer 9', 'Dryer 9', 'Dryer', 'In use', '32 minutes left'));
 
 	res.json(machines);
 }

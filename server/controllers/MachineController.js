@@ -1,102 +1,84 @@
 const request = require('request');
+const getURL = require('../lib/scraper').getUrlFor;
+const getLocations = require('../lib/scraper').scrapeLocations;
+const parseHTML = require('../lib/Machine').parse;
+const Redis = require('../lib/Redis');
 
-function getAllMachines(req) {
+async function getAllMachines(req) {
 	req.logger.info({type: 'GET', location: 'all'});
-	return new Promise(function (resolve) {
-		let machines = {};
-		getLocations(req).then(locations => locations.forEach(location => {
-			req.redis.exists(location.name, function (err, exists) {
-				if (err) {
-					req.logger.err('Redis error- ' + err);
-				}
-				if (exists === 0) {
-					let url = location.url;
-					url = url.charAt(0).toUpperCase() + url.slice(1);
-					request(url, function (err, response, body) {
-						let results = [];
-						if (!err && response.statusCode === 200) {
-							results = parseHTML(body);
-							machines[location.name] = results;
-							req.redis.set(location.name, JSON.stringify(results));
-							req.redis.expire(location.name, 60);
-							if (Object.keys(machines).length === locations.length) {
-								resolve(machines);
-							}
-						}
-					});
-				} else {
-					req.redis.get(location.name, function (err, result) {
-						if (err) req.logger.err('Redis Error- ' + err);
-						machines[location.name] = JSON.parse(result);
-						if (Object.keys(machines).length === locations.length) {
-							resolve(machines);
-						}
-					});
-				}
-			});
-		}))
-			.catch(console.error);
-	});
+
+	const redis = new Redis(req.redis);
+	let machines = {};
+	let locations = await getLocations(req.redis);
+	for (let location of locations) {
+		let exists = await redis.exists(location.name);
+		// if (err) req.logger.err('Redis error- ' + err);
+
+		if (exists === 0) {
+			let url = capitalizeFirstLetter(location.url);
+			let body = await request(url);
+			let results = parseHTML(body);
+			machines[location.name] = results;
+			req.redis.set(location.name, JSON.stringify(results));
+			req.redis.expire(location.name, 60);
+		} else {
+			let result = await redis.get(location.name);
+			// if (err) req.logger.err('Redis Error- ' + err);
+			machines[location.name] = JSON.parse(result);
+		}
+	}
+
+	return machines;
 }
 
-function getMachines(req, res) {
+async function getMachines(req, res) {
 	console.time('allStart');
-	req.redis.exists('all', function (err, exists) {
-		if (exists === 0) {
-			getAllMachines(req)
-				.then(function (machines) {
-					req.redis.set('all', JSON.stringify(machines));
-					req.redis.expire('all', 60);
-					res.json(machines);
-				});
-		} else {
-			req.redis.get('all', function (err, result) {
-				console.timeEnd('allStart');
-				let machines = JSON.parse(result);
-				res.json(machines);
-			});
-		}
-	});
+	const redis = new Redis(req.redis);
+
+	let allExists = await redis.exists('all');
+	if (allExists === 0) {
+		let machines = await getAllMachines(req);
+		req.redis.set('all', JSON.stringify(machines));
+		req.redis.expire('all', 60);
+		res.json(machines);
+	} else {
+		let machines = await redis.get('all');
+		console.timeEnd('allStart');
+		res.json(JSON.parse(machines));
+	}
 }
 
 function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function getMachinesAtLocation(req, res) {
+async function getMachinesAtLocation(req, res) {
 	req.logger.info({type: 'GET', location: req.params.location});
-	getURL(req.params.location, req).then(function (u) {
-		let url = capitalizeFirstLetter(u);
-		if (url === undefined) {
-			req.logger.err('Incorrect URL');
-			res.status(404).send('Error');
-			return;
-		}
+	let u = await getURL(req.params.location, req);
+	let url = capitalizeFirstLetter(u);
+	if (url === undefined) {
+		req.logger.err('Incorrect URL');
+		res.status(404).send('Error');
+		return;
+	}
 
-		req.redis.exists(req.params.location, function (err, exists) {
-			if (err) {
-				req.logger.err('Redis error- ' + err);
-			}
+	const redis = new Redis(req.redis);
+	let exists = await redis.exists(req.params.location);
+	// if (err) {
+	// 	req.logger.err('Redis error- ' + err);
+	// }
 
-			if (exists === 0) {
-				request(url, function (err, response, body) {
-					let results = [];
-					if (!err && response.statusCode === 200) {
-						results = parseHTML(body);
-					}
-					req.redis.set(req.params.location, JSON.stringify(results));
-					req.redis.expire(req.params.location, 60);
-					res.json(results);
-				});
-			} else {
-				req.redis.get(req.params.location, function (err, result) {
-					if (err) req.logger.err('Redis Error- ' + err);
-					let oldResponse = JSON.parse(result);
-					res.json(oldResponse);
-				});
-			}
-		});
-	});
+	if (exists === 0) {
+		let body = await request(url);
+		let results = parseHTML(body);
+		req.redis.set(req.params.location, JSON.stringify(results));
+		req.redis.expire(req.params.location, 60);
+		res.json(results);
+	} else {
+		let result = await redis.get(req.params.location);
+		// if (err) req.logger.err('Redis Error- ' + err);
+		res.json(JSON.parse(result));
+	}
 }
 
 function getPossibleStatuses(req, res) {
