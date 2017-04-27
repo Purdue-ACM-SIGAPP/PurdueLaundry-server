@@ -1,13 +1,14 @@
 {
-  "name": "purdue-laundry-api",
+  "name": "purduelaundry-server",
   "version": "1.0.0",
-  "description": "Server for parsing things in my first attempt at NodeJS",
+  "description": "The API Server for ACM SigApp's Purdue Laundry app",
   "main": "index.js",
+  "repository": "https://github.com/purdue-acm-sigapp",
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
-  "author": "",
+  "author": "Purdue ACM SigApp <acm@purdue.edu>",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.13.3",
@@ -21,6 +22,8 @@
     "request": "latest"
   },
   "devDependencies": {
-    "eslint": "^3.19.0"
+    "eslint": "^3.19.0",
+    "jasmine": "^2.6.0",
+    "jasmine-spec-reporter": "^4.0.0"
   }
 }
