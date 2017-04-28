@@ -1,5 +1,8 @@
 const Machine = require('../classes/Machine');
 
+/**
+ * Given a machine number and a type (washer or dryer), this function creates a Machine object
+ */
 function createNewMachines(number, type) {
 	let name = type + ' ' + number;
 	let time = getMachineTime();
@@ -7,6 +10,10 @@ function createNewMachines(number, type) {
 	return new Machine(name, name, type, status, time);
 }
 
+/**
+ * This function spits out a random time string. It has a 1/6 chance of being available, 1/6 chance of being
+ * done running, and a 4/6 chance of being still running
+ */
 function getMachineTime() {
 	let time = Math.floor((Math.random() * 60) + 1);
 	if (time > 50) {
@@ -18,6 +25,9 @@ function getMachineTime() {
 	}
 }
 
+/**
+ * Given a fake time string, this function spits out the corresponding status
+ */
 function getMachineStatus(time) {
 	if (time === ' ') {
 		return 'Available';
@@ -30,6 +40,9 @@ function getMachineStatus(time) {
 	}
 }
 
+/**
+ * This route just creates an array of a random amount of washers and a random amount of dryers
+ */
 function randomData(req, res) {
 	let numberOfWashers = Math.floor((Math.random() * 15) + 5);
 	let numberOfDryers = Math.floor((Math.random() * 15) + 5);
@@ -46,12 +59,14 @@ function randomData(req, res) {
 	res.json(machines);
 }
 
+/**
+ * This route, unlike randomData, creates an array of 9 washers and 9 dryers - this set of machines is guaranteed to
+ * have every single status and a variety of times left between all 9 of each (or, minimally, the final 5 of each);
+ */
 function comprehensiveData(req, res) {
-	let numberOfWashers = 4;
-	let numberOfDryers = 4;
 	let machines = [];
 
-	for (let i = 0; i < numberOfWashers; i++) {
+	for (let i = 0; i < 4; i++) {
 		machines.push(createNewMachines(i, 'Washer'));
 	}
 
@@ -61,7 +76,7 @@ function comprehensiveData(req, res) {
 	machines.push(new Machine('Washer 8', 'Washer 8', 'Washer', 'End of Cycle', '0 minutes left'));
 	machines.push(new Machine('Washer 9', 'Washer 9', 'Washer', 'In use', '18 minutes left'));
 
-	for (let i = 0; i < numberOfDryers; i++) {
+	for (let i = 0; i < 4; i++) {
 		machines.push(createNewMachines(i, 'Dryer'));
 	}
 

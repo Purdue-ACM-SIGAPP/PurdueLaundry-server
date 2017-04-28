@@ -17,6 +17,8 @@ client.on('connect', () => {
 	logger.info('redis connected');
 	app.listen(app.get('port'), logger.info('Application listening on port', app.get('port')));
 });
+const Redis = require('./server/classes/Redis');
+let r = new Redis(client);
 
 // Initialize logger
 const log4js = require('log4js');
@@ -40,11 +42,11 @@ const logger = log4js.getLogger('purdue-laundry');
 
 // Provide caching and logging to controllers
 app.use((req, res, next) => {
-	req.redis = client;
 	req.logger = logger;
-	//req.stats = stats;
+	req.redis = r;
+	// req.stats = stats;
 	next();
 });
 
 // Set up routes
-require('./server/routes')(app);
+require('./server/routes')(app, client);

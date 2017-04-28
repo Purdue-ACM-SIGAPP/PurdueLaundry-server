@@ -43,7 +43,11 @@ module.exports = (app, redis) => {
 	 * Because the codebase has moved from Promise hell (because apparently that's a thing) to async/await, errors
 	 * now are errors thrown up the stack. Because of this, we need error middleware to catch and log the errors
 	 * should they happen to come up
+	 *
+	 * The below comment is to not throw errors for the unused next. The function needs
+	 * to have 4 parameters to be an error middleware
 	 */
+	// eslint-disable-next-line
 	function errorCatcher(err, req, res, next) {
 		req.logger.err(err);
 		res.status(500).send({

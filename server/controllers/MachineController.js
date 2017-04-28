@@ -7,7 +7,7 @@ async function getMachines(req, res) {
 	console.time('allStart');
 
 	// Get the machines
-	let machines = await scrapeAllMachines();
+	let machines = await scrapeAllMachines(req.redis);
 
 	// Clock in and send response
 	console.timeEnd('allStart');
@@ -27,7 +27,7 @@ async function getMachinesAtLocation(req, res) {
 	}
 
 	// Scrape the machines and send them
-	let results = await scrapeMachinesAt(req.params.location);
+	let results = await scrapeMachinesAt(req.params.location, req.redis);
 	res.json(results);
 }
 
