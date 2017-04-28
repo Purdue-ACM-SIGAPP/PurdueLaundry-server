@@ -1,34 +1,24 @@
 // TODO: Add a catch block *somewhere*
-
 const {scrapeAllMachines, scrapeMachinesAt, getUrlFor} = require('../lib/scraper');
-const Redis = require('../classes/Redis');
-
-async function getAllMachines(req) {
-	req.logger.info({type: 'GET', location: 'all'});
-
-	const redis = new Redis(req.redis);
-	return await scrapeAllMachines(redis);
-}
 
 async function getMachines(req, res) {
+	// Logging
+	req.logger.info({type: 'GET', location: 'all'});
 	console.time('allStart');
-	const redis = new Redis(req.redis);
 
-	let allExists = await redis.exists('all');
-	if (allExists === 0) {
-		let machines = await getAllMachines(req);
-		req.redis.set('all', JSON.stringify(machines));
-		req.redis.expire('all', 60);
-		res.json(machines);
-	} else {
-		let machines = await redis.get('all');
-		console.timeEnd('allStart');
-		res.json(JSON.parse(machines));
-	}
+	// Get the machines
+	let machines = await scrapeAllMachines();
+
+	// Clock in and send response
+	console.timeEnd('allStart');
+	res.json(machines);
 }
 
 async function getMachinesAtLocation(req, res) {
+	// Logging
 	req.logger.info({type: 'GET', location: req.params.location});
+
+	// Get the URL for this location
 	let url = await getUrlFor(req.params.location, req);
 	if (url === undefined) {
 		req.logger.err('Incorrect URL');
@@ -36,16 +26,9 @@ async function getMachinesAtLocation(req, res) {
 		return;
 	}
 
-	const redis = new Redis(req.redis);
-	let exists = await redis.exists(req.params.location);
-
-	if (exists === 0) {
-		let results = await scrapeMachinesAt(req.params.location, redis);
-		res.json(results);
-	} else {
-		let result = await redis.get(req.params.location);
-		res.json(JSON.parse(result));
-	}
+	// Scrape the machines and send them
+	let results = await scrapeMachinesAt(req.params.location);
+	res.json(results);
 }
 
 function getPossibleStatuses(req, res) {

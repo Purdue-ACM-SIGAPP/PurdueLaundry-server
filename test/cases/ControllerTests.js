@@ -1,0 +1,5 @@
+describe('Controllers', () => {
+	describe('MachineController', () => {
+
+	});
+});

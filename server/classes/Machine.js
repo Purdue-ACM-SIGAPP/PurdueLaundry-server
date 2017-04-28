@@ -1,5 +1,14 @@
 const cheerio = require('cheerio');
 
+/**
+ * This is the object used to represent a laundry machine
+ *
+ * name is the name as it is displayed on ITaP's website
+ * displayName is the name as it is displayed in the app - the leading zeros are stripped
+ * type is Washer or Dryer
+ * status is Ready, In Use, Done, etc
+ * time is the amount of time until the machine is done
+ */
 class Machine {
 	constructor(name, displayName, type, status, time) {
 		this.name = name;
@@ -9,6 +18,9 @@ class Machine {
 		this.time = time;
 	}
 
+	/**
+	 * Parse takes an HTML body and spits out an array of the machines in the body
+	 */
 	static parse(body) {
 		let results = [];
 		let $ = cheerio.load(body);
