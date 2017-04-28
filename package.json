@@ -6,9 +6,9 @@
   "repository": "https://github.com/purdue-acm-sigapp",
   "scripts": {
     "start": "node app.js",
-    "test": "npm run jasmine && npmm run eslint",
+    "test": "npm run jasmine && npm run eslint",
     "jasmine": "jasmine JASMINE_CONFIG_PATH=./jasmine.json",
-    "eslint": "node_modules/.bin/eslint routes/* app.js"
+    "eslint": "node_modules/.bin/eslint server/* app.js"
   },
   "author": "Purdue ACM SigApp <acm@purdue.edu>",
   "license": "ISC",
