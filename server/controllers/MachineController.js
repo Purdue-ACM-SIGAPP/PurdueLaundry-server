@@ -1,4 +1,3 @@
-// TODO: Add a catch block *somewhere*
 const {scrapeAllMachines, scrapeMachinesAt, getUrlFor} = require('../lib/scraper');
 
 async function getMachines(req, res) {
