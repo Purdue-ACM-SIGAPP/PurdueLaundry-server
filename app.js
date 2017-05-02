@@ -49,4 +49,4 @@ app.use((req, res, next) => {
 });
 
 // Set up routes
-require('./server/routes')(app, client);
+require('./server/routes')(app, r);
