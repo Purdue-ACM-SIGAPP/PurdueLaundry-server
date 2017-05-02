@@ -4,19 +4,46 @@ This is a backend for the Purdue Laundry application. It scrapes
 data from the Purdue Laundry alert page and provides a nice API 
 for accessing it from the app. 
 
-# Running the Server
+# Running the Server with Docker
 
 Our server is Dockerized, so running it will require you to install
 `docker` and `docker-compose`. Refer to the [docker documentation](https://docs.docker.com/compose/install/)
 for instructions on how to do that. It's fairly well documented
-and painless. If you are running Ubuntu, there are special
-instructions. Ask @vidia for those instructions.
+and painless. 
 
 Once you have those 2 dependencies installed, you can build and run
-the server with these 2 commands respectively:  
+the server by simply running:
 
-    $ docker-compose build
-    $ docker-compose up
+    $ npm start
+    
+**If you are running Ubuntu:** there are special instructions that
+you need to install Docker. Ask @vidia for those instructions.
+    
+# Running the Server without Docker
+
+That said, it is possible to run the server *without* using Docker;
+it's just more difficult since you'll have to worry about dependencies. 
+
+First, do the following:
+- Install a version of Node.js that supports `async`/`await`
+	- If you have an older version already installed, I suggest
+	moving to `nvm` (Node Version Manager). It makes using
+	different versions of Node easy, and the version
+	on `apt-get` is out of date anyway.
+- Run `npm i --production` (This installs every non-dev dependency)
+- Run `sudo npm i -g pm2` (We use pm2 to run our server)
+
+Once those things are installed, just run:
+
+    $ npm run start-vanilla
+    
+***Important:*** This method of running the server will not be
+supported. There are a lot of dependencies for this project
+and they could all be affected by other parts of your machine,
+making this use case very difficult to debug. We will try our best
+to keep this list of dependencies accurate to our `Dockerfile`,
+but if this does not work, you're going to have to try to fix it
+yourself or just install Docker. Sorry.
 
 # Testing
 

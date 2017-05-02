@@ -42,8 +42,10 @@ function getMachineStatus(time) {
 
 /**
  * This route just creates an array of a random amount of washers and a random amount of dryers
+ *
+ * @return {Array} an array of machines
  */
-function randomData(req, res) {
+function randomData() {
 	let numberOfWashers = Math.floor((Math.random() * 15) + 5);
 	let numberOfDryers = Math.floor((Math.random() * 15) + 5);
 	let machines = [];
@@ -56,14 +58,16 @@ function randomData(req, res) {
 		machines.push(createNewMachines(i, 'Dryer'));
 	}
 
-	res.json(machines);
+	return machines;
 }
 
 /**
  * This route, unlike randomData, creates an array of 9 washers and 9 dryers - this set of machines is guaranteed to
  * have every single status and a variety of times left between all 9 of each (or, minimally, the final 5 of each);
+ *
+ * @return {Array} an array of machines
  */
-function comprehensiveData(req, res) {
+function comprehensiveData() {
 	let machines = [];
 
 	for (let i = 0; i < 4; i++) {
@@ -86,7 +90,7 @@ function comprehensiveData(req, res) {
 	machines.push(new Machine('Dryer 8', 'Dryer 8', 'Dryer', 'End of Cycle', '0 minutes left'));
 	machines.push(new Machine('Dryer 9', 'Dryer 9', 'Dryer', 'In use', '32 minutes left'));
 
-	res.json(machines);
+	return machines;
 }
 
 module.exports = {randomData, comprehensiveData};

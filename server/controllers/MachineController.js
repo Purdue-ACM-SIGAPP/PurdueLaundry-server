@@ -32,7 +32,7 @@ async function getMachinesAtLocation(req, res) {
 
 function getPossibleStatuses(req, res) {
 	let status = ['Available', 'In Use', 'Almost Done', 'End of Cycle', 'Out of Order', 'Offline', 'Ready To Start'];
-	res.json(status);
+	res.send(status);
 }
 
 module.exports = {

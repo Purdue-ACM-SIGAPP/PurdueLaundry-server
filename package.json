@@ -5,7 +5,9 @@
   "main": "index.js",
   "repository": "https://github.com/purdue-acm-sigapp",
   "scripts": {
-    "start": "node app.js",
+    "prestart": "docker-compose build",
+    "start": "docker-compose up",
+    "start-vanilla": "pm2 start processes.json --no-daemon",
     "test": "npm run jasmine && npm run eslint",
     "jasmine": "jasmine JASMINE_CONFIG_PATH=./jasmine.json",
     "eslint": "node_modules/.bin/eslint server/* app.js"
