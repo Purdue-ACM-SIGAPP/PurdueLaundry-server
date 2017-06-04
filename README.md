@@ -17,7 +17,7 @@ the server by simply running:
     $ npm start
     
 **If you are running Ubuntu:** there are special instructions that
-you need to install Docker. Ask @vidia for those instructions.
+you need to install Docker. Look to `install-docker-ubuntu.sh` for those instructions.
     
 # Running the Server without Docker
 
