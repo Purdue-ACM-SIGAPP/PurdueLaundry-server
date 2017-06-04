@@ -4,7 +4,10 @@
  */
 function wrapper(async) {
 	return done => {
-		async().then(done, e => { fail(e); done(); });
+		async().then(done, e => {
+			fail(e);
+			done();
+		});
 	};
 }
 
@@ -37,7 +40,17 @@ describe('lib', () => {
 	});
 
 	describe('scraper', () => {
-		let {scrapeLocations, getUrlFor, scrapeAllMachines, scrapeMachinesAt} = require('../../server/lib/scraper');
+		let {scrapeLocations, getUrlFor, scrapeAllMachines, scrapeMachinesAt, get} = require('../../server/lib/scraper');
+
+		/**
+		 * We have no way of testing without consistent laundry data. When testing, ITaP may be offline,
+		 * the testing computer may not have an internet connection, and we need to know what to test for.
+		 * We can't set up unit tests without knowing what to expect
+		 */
+		function setUpSpy(url) {
+			const fs = require('fs');
+			spyOn(this, get).and.callFake(async () => await fs.read(`../lib/${url}_test_response.txt`));
+		}
 
 		// This isn't testing Redis - use a fake one
 		let redis = {
@@ -50,33 +63,32 @@ describe('lib', () => {
 		};
 
 		describe('scrapeLocations', () => {
-			it('just locations', () => {
-
-			});
+			it('just locations', wrapper(async () => {
+				setUpSpy('scrape_locations_just_locations');
+			}));
 
 			it('locations with some HTML fluff', () => {
-
+				setUpSpy('scrape_locations_html_fluff');
 			});
 
 			it('locations with other option tags', () => {
-
+				setUpSpy('scrape_locations_other_option_tags');
 			});
 
 			it('whole page', () => {
-
+				setUpSpy('scrape_locations_whole_page');
 			});
 
-			it('404', () => {
-
+			it('error', () => {
+				setUpSpy('scrape_locations_error');
+				let actual = scrapeLocations(redis);
+				expect(actual).toBe([]);
 			});
 		});
 
-		/**
-		 * These tests may have to be changed in the future. It all depends on how much the list of dorms with
-		 * laundry machines changes
-		 */
 		describe('getUrlFor', () => {
 			it('valid url', wrapper(async () => {
+				setUpSpy('get_url_for_valid_url');
 				let url = await getUrlFor('Earhart Laundry Room', redis);
 
 				let root = 'http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx';
@@ -84,6 +96,7 @@ describe('lib', () => {
 			}));
 
 			it('invalid url', wrapper(async () => {
+				setUpSpy('get_url_for_invalid_url');
 				let url = await getUrlFor('is this the krusty krab?');
 				expect(url).toEqual('');
 			}));
@@ -91,37 +104,37 @@ describe('lib', () => {
 
 		describe('scrapeAllMachines', () => {
 			it('just machines', () => {
-
+				setUpSpy('scrape_all_machines_just_machines');
 			});
 
 			it('machines with fluff', () => {
-
+				setUpSpy('scrape_all_machines_fluff');
 			});
 
 			it('full page', () => {
-
+				setUpSpy('scrape_all_machines_full_page');
 			});
 
-			it('404', () => {
-
+			it('error', () => {
+				setUpSpy('scrape_all_machines_error');
 			});
 		});
 
 		describe('scrapeMachinesAt', () => {
 			it('just machines', () => {
-
+				setUpSpy('scrape_machines_at_just_machines');
 			});
 
 			it('machines with fluff', () => {
-
+				setUpSpy('scrape_machines_at_fluff');
 			});
 
 			it('full page', () => {
-
+				setUpSpy('scrape_machines_at_full_page');
 			});
 
-			it('404', () => {
-
+			it('error', () => {
+				setUpSpy('scrape_machines_at_error');
 			});
 		});
 	});

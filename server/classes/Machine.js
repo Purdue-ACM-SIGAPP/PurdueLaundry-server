@@ -8,6 +8,8 @@ const cheerio = require('cheerio');
  * type is Washer or Dryer
  * status is Ready, In Use, Done, etc
  * time is the amount of time until the machine is done
+ *
+ * @type {Object}
  */
 class Machine {
 	constructor(name, displayName, type, status, time) {

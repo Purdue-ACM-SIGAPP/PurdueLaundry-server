@@ -43,7 +43,7 @@ function getMachineStatus(time) {
 /**
  * This route just creates an array of a random amount of washers and a random amount of dryers
  *
- * @return {Array} an array of machines
+ * @return {Array.<Machine>} an array of machines
  */
 function randomData() {
 	let numberOfWashers = Math.floor((Math.random() * 15) + 5);
@@ -65,7 +65,7 @@ function randomData() {
  * This route, unlike randomData, creates an array of 9 washers and 9 dryers - this set of machines is guaranteed to
  * have every single status and a variety of times left between all 9 of each (or, minimally, the final 5 of each);
  *
- * @return {Array} an array of machines
+ * @return {Array.<Machine>} an array of machines
  */
 function comprehensiveData() {
 	let machines = [];

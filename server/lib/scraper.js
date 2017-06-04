@@ -3,6 +3,13 @@ const request = require('request-promise');
 const parseHtml = require('../classes/Machine').parse;
 
 /**
+ * This function exists to make testing possible. Jasmine doesn't have a mock server, but it can mock method stubs.
+ */
+async function get(url) {
+	return await request(url);
+}
+
+/**
  * This function scrapes a list of all of the available laundry rooms. It returns an array of objects
  * specifying both the name and full url of each room
  */
@@ -15,7 +22,7 @@ async function scrapeLocations(redis) {
 	let exists = await redis.exists(key);
 	if (exists === 0) {
 		// Get the page contents
-		let html = await request(url);
+		let html = await get(url);
 		let $ = cheerio.load(html);
 
 		// Turn the `select` options into a fancy array
@@ -62,7 +69,7 @@ async function scrapeAllMachines(redis) {
 		if (exists === 0) {
 			// Get page contents
 			let url = location.url;
-			let body = await request(url);
+			let body = await get(url);
 
 			// Use our fancy parsing function
 			let results = parseHtml(body);
@@ -90,7 +97,7 @@ async function scrapeMachinesAt(location, redis) {
 	if (exists === 0) {
 		// Get page contents
 		let url = await getUrlFor(location);
-		let body = await request(url);
+		let body = await get(url);
 
 		// Use our fancy parsing function
 		let results = parseHtml(body);
@@ -106,4 +113,4 @@ async function scrapeMachinesAt(location, redis) {
 	}
 }
 
-module.exports = {scrapeLocations, getUrlFor, scrapeAllMachines, scrapeMachinesAt};
+module.exports = {scrapeLocations, getUrlFor, scrapeAllMachines, scrapeMachinesAt, get};
