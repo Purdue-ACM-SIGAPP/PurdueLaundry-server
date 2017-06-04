@@ -49,7 +49,7 @@ describe('lib', () => {
 		 */
 		function setUpSpy(url) {
 			const fs = require('fs');
-			spyOn(this, get).and.callFake(async () => await fs.read(`../lib/${url}_test_response.txt`));
+			spyOn(this, get).and.callFake(async () => await fs.read(`../lib/${url}.html`));
 		}
 
 		// This isn't testing Redis - use a fake one
@@ -64,31 +64,34 @@ describe('lib', () => {
 
 		describe('scrapeLocations', () => {
 			it('just locations', wrapper(async () => {
-				setUpSpy('scrape_locations_just_locations');
+				setUpSpy('just_locations');
 			}));
 
 			it('locations with some HTML fluff', () => {
-				setUpSpy('scrape_locations_html_fluff');
+				setUpSpy('locations_html_fluff');
 			});
 
 			it('locations with other option tags', () => {
-				setUpSpy('scrape_locations_other_option_tags');
+				setUpSpy('locations_other_option_tags');
 			});
 
 			it('whole page', () => {
-				setUpSpy('scrape_locations_whole_page');
+				setUpSpy('whole_page');
 			});
 
 			it('error', () => {
-				setUpSpy('scrape_locations_error');
+				setUpSpy('error');
 				let actual = scrapeLocations(redis);
 				expect(actual).toBe([]);
 			});
 		});
 
 		describe('getUrlFor', () => {
+			beforeEach(() => {
+				// Mock getURLS
+			});
+
 			it('valid url', wrapper(async () => {
-				setUpSpy('get_url_for_valid_url');
 				let url = await getUrlFor('Earhart Laundry Room', redis);
 
 				let root = 'http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx';
@@ -96,7 +99,6 @@ describe('lib', () => {
 			}));
 
 			it('invalid url', wrapper(async () => {
-				setUpSpy('get_url_for_invalid_url');
 				let url = await getUrlFor('is this the krusty krab?');
 				expect(url).toEqual('');
 			}));
@@ -104,37 +106,37 @@ describe('lib', () => {
 
 		describe('scrapeAllMachines', () => {
 			it('just machines', () => {
-				setUpSpy('scrape_all_machines_just_machines');
+				setUpSpy('just_all_machines');
 			});
 
 			it('machines with fluff', () => {
-				setUpSpy('scrape_all_machines_fluff');
+				setUpSpy('all_machines_fluff');
 			});
 
 			it('full page', () => {
-				setUpSpy('scrape_all_machines_full_page');
+				setUpSpy('all_machines_full_page');
 			});
 
 			it('error', () => {
-				setUpSpy('scrape_all_machines_error');
+				setUpSpy('error');
 			});
 		});
 
 		describe('scrapeMachinesAt', () => {
 			it('just machines', () => {
-				setUpSpy('scrape_machines_at_just_machines');
+				setUpSpy('just_machines');
 			});
 
 			it('machines with fluff', () => {
-				setUpSpy('scrape_machines_at_fluff');
+				setUpSpy('machines_fluff');
 			});
 
 			it('full page', () => {
-				setUpSpy('scrape_machines_at_full_page');
+				setUpSpy('full_page');
 			});
 
 			it('error', () => {
-				setUpSpy('scrape_machines_at_error');
+				setUpSpy('error');
 			});
 		});
 	});
