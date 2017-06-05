@@ -88,7 +88,8 @@ describe('lib', () => {
 
 		describe('getUrlFor', () => {
 			beforeEach(() => {
-				// Mock getURLS
+				let scrapeLocations = require('../../server/lib/scraper').scrapeLocations;
+
 			});
 
 			it('valid url', wrapper(async () => {

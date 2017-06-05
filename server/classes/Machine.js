@@ -28,6 +28,7 @@ class Machine {
 		let results = [];
 		let $ = cheerio.load(body);
 
+		console.log($('tr'));
 		// Loop through the table rows of the HTML
 		$('tr').forEach(function (machine) {
 			// A row will have a class iff (if and only if) it is a machine
