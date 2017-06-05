@@ -39,7 +39,7 @@ async function scrapeLocations(redis) {
 		return locations;
 	} else {
 		// Great, they were cached! No HTTP requests today, Satan!
-		return await redis.get(key);
+		return JSON.parse(await redis.get(key));
 	}
 }
 
@@ -61,7 +61,7 @@ async function scrapeAllMachines(redis) {
 	let machines = {};
 	let locations = await scrapeLocations(redis);
 
-	// Scrape machines of every
+	// Scrape machines of every location
 	for (let location of locations) {
 		// Check to make sure the machines aren't cached
 		let exists = await redis.exists(location.name);
@@ -74,6 +74,8 @@ async function scrapeAllMachines(redis) {
 			// Use our fancy parsing function
 			let results = parseHtml(body);
 			machines[location.name] = results;
+
+			console.log(results);
 
 			// Cache the results for 1 minute
 			redis.redis.set(location.name, JSON.stringify(results));

@@ -8,6 +8,8 @@ async function getMachines(req, res) {
 	// Get the machines
 	let machines = await scrapeAllMachines(req.redis);
 
+	console.log(machines);
+
 	// Clock in and send response
 	console.timeEnd('allStart');
 	res.json(machines);

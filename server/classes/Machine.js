@@ -13,6 +13,8 @@ const cheerio = require('cheerio');
  */
 class Machine {
 	constructor(name, displayName, type, status, time) {
+		console.log(name);
+
 		this.name = name;
 		this.displayName = displayName;
 		this.type = type;
@@ -28,16 +30,15 @@ class Machine {
 		let results = [];
 		let $ = cheerio.load(body);
 
-		console.log($('tr'));
 		// Loop through the table rows of the HTML
-		$('tr').forEach(function (machine) {
+		Array.from($('tr')).forEach(function (machine) {
 			// A row will have a class iff (if and only if) it is a machine
 			if (machine.class === '') {
 				return;
 			}
 
 			// Extract the details we want from the HTML
-			let name = $('.name', machine);
+			let name = $('.name', machine).text();
 			let displayName = $('.name', machine).text().replace(/0+([1-9]+)/, '$1');
 			let type = $('.type', machine).text();
 			let status = $('.status', machine).text();

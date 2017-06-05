@@ -28,12 +28,12 @@ module.exports = (app, redis) => {
 	 * res.send to make it first store the about-to-be-sent value in the cache, then send it as normal.
 	 */
 	function makeSendStore(req, res, next) {
-		const send = res.send;
+		res.oldSend = res.send;
 
 		res.send = data => {
 			redis.redis.set(req.path, JSON.stringify(data));
 			redis.redis.expire(req.path, 1000 * 60);
-			send(data);
+			res.oldSend(data);
 		};
 
 		next();
