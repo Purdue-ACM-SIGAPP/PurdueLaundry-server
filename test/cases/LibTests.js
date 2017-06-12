@@ -89,7 +89,7 @@ describe('lib', () => {
 		describe('getUrlFor', () => {
 			beforeEach(() => {
 				let scrapeLocations = require('../../server/lib/scraper').scrapeLocations;
-
+				spyOn(this, scrapeLocations).and.callFake(() => [])
 			});
 
 			it('valid url', wrapper(async () => {
