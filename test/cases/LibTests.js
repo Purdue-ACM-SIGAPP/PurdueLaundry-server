@@ -66,15 +66,13 @@ describe('lib', () => {
 	});
 
 	describe('scraper', () => {
-		let get;
-
 		/**
 		 * We have no way of testing without consistent laundry data. When testing, ITaP may be offline,
 		 * the testing computer may not have an internet connection, and we need to know what to test for.
 		 * We can't set up unit tests without knowing what to expect
 		 */
 		function setUpSpy(url) {
-			get = spyOn(scraper, 'get').and.returnValue(fs.readFileSync(`../lib/${url}.html`));
+			spyOn(scraper, 'get').and.returnValue(fs.readFileSync(`../lib/${url}.html`));
 		}
 
 		// This isn't testing Redis - use a fake one
@@ -90,11 +88,11 @@ describe('lib', () => {
 		describe('scrapeLocations', () => {
 			let expected = JSON.parse(fs.readFileSync('../lib/locations.json', 'utf-8'));
 
-			it('can scrape just the locations', wrapper(async () => {
+			it('can scrape just the locations', () => {
 				setUpSpy('just_locations');
 				const actual = scraper.scrapeLocations(redis);
 				expect(actual).toBe(expected);
-			}));
+			});
 
 			it('can scrape locations with some HTML fluff', () => {
 				setUpSpy('locations_html_fluff');
@@ -119,6 +117,11 @@ describe('lib', () => {
 				let actual = scraper.scrapeLocations(redis);
 				expect(actual).toBe([]);
 			});
+
+			it('should be consistent with Purdue\'s API', wrapper(async () => {
+				const actual = await scraper.scrapeLocations(redis);
+				expect(actual).toBe(expected);
+			}));
 		});
 
 		describe('getUrlFor', () => {
@@ -166,6 +169,11 @@ describe('lib', () => {
 				const actual = scraper.scrapeAllMachines(redis);
 				expect(actual).toBe(expected);
 			});
+
+			it('should be consistent with Purdue\'s API', wrapper(async () => {
+				const actual = await scraper.scrapeAllMachines(redis);
+				expect(actual).toBe(expected);
+			}));
 		});
 
 		describe('scrapeMachinesAt', () => {
@@ -195,6 +203,11 @@ describe('lib', () => {
 				const actual = scraper.scrapeMachinesAt(location);
 				expect(actual).toBe(expected);
 			});
+
+			it('should be consistent with Purdue\'s API', wrapper(async () => {
+				const actual = await scraper.scrapeMachinesAt(location);
+				expect(actual).toBe(expected);
+			}));
 		});
 	});
 });

@@ -1,3 +1,8 @@
+// Print the ASCII art
+const fs = require('fs');
+const art = fs.readFileSync('./ascii-art.txt', 'utf-8');
+console.log(art);
+
 // Initialize Express
 const express = require('express');
 const app = express();

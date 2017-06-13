@@ -1,3 +1,4 @@
+/* eslint-env jasmine */
 /**
  * Unfortunately, Jasmine doesn't natively support async/await, so we have to use this convenient wrapper function
  * that I *totally* didn't steal off of https://github.com/jasmine/jasmine/issues/923 (thank you @jamesthurley!)

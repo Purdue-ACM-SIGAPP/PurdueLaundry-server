@@ -9,6 +9,13 @@ module.exports = (app, redis) => {
 	 * controllers and gives it to the router. How it works is
 	 * detailed in the documentation below.
 	 */
+	/**
+	 * ( ͡° ͜ʖ ͡°)
+	 */
+	function setHeaders(req, res, next) {
+		res.setHeader('X-SigApp', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'); // TODO Make a shortlink
+		next();
+	}
 
 	/**
 	 * The first method in a route declaration is executed first. checkCache checks to make sure this route
@@ -16,11 +23,17 @@ module.exports = (app, redis) => {
 	 * request. If it hasn't, it calls next to execute the request as normal.
 	 */
 	async function checkCache(req, res, next) {
+		console.time(req.route);
+
 		let exists = await redis.exists(req.path);
 		if (exists) {
+			req.logger.info(`Result for route ${req.route} was in the cache`);
 			let result = await redis.get(req.path);
 			res.send(JSON.parse(result));
-		} else next();
+		} else {
+			req.logger.info(`Result for route ${req.route} was not in the cache`);
+			next();
+		}
 	}
 
 	/**
@@ -31,6 +44,8 @@ module.exports = (app, redis) => {
 		res.oldSend = res.send;
 
 		res.send = data => {
+			console.timeEnd(req.path);
+
 			redis.redis.set(req.path, JSON.stringify(data));
 			redis.redis.expire(req.path, 1000 * 60);
 			res.oldSend(data);
@@ -64,6 +79,7 @@ module.exports = (app, redis) => {
 	}
 
 	// Let's actually use the middleware
+	app.use(setHeaders);
 	app.use(checkCache);
 	app.use(makeSendStore);
 	app.use(errorCatcher);
