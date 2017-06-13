@@ -1,3 +1,4 @@
+/* eslint-env jasmine */
 /**
  * Unfortunately, Jasmine doesn't natively support async/await, so we have to use this convenient wrapper function
  * that I *totally* didn't steal off of https://github.com/jasmine/jasmine/issues/923 (thank you @jamesthurley!)
@@ -35,11 +36,26 @@ describe('Controllers', () => {
 				await MachineController.getMachines(req, res);
 				expect(Object.keys(result).length).toBeGreaterThan(1);
 			}));
+
+			it('returns Machine objects', wrapper(async () => {
+				await MachineController.getMachines(req, res);
+				result.forEach(m => expect(typeof m).toBe('Machine'));
+			}));
 		});
 
 		describe('getMachinesAtLocation', () => {
 			it('doesn\t throw an error', wrapper(async () => {
 				expect(await MachineController.getMachinesAtLocation(req, res)).not.toThrow();
+			}));
+
+			it('gets 1 location', wrapper(async () => {
+				await MachineController.getMachines(req, res);
+				expect(Object.keys(result).length).toBe(1);
+			}));
+
+			it('returns Machine objects', wrapper(async () => {
+				await MachineController.getMachines(req, res);
+				result.forEach(m => expect(typeof m).toBe('Machine'));
 			}));
 		});
 
@@ -48,7 +64,7 @@ describe('Controllers', () => {
 				MachineController.getPossibleStatuses(req, res);
 				const expected = ['Available', 'In Use', 'Almost Done', 'End of Cycle', 'Out of Order', 'Offline', 'Ready To Start'];
 
-				expect(result).toEqual(expected);
+				expect(result).toBe(expected);
 			});
 		});
 	});

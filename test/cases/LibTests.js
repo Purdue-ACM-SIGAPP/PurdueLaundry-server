@@ -1,3 +1,9 @@
+/* eslint-env jasmine */
+import * as scraper from '../../server/lib/scraper';
+import {randomData, comprehensiveData} from '../../server/lib/mock-data';
+import fs from 'fs';
+import _ from 'lodash';
+
 /**
  * Unfortunately, Jasmine doesn't natively support async/await, so we have to use this convenient wrapper function
  * that I *totally* didn't steal off of https://github.com/jasmine/jasmine/issues/923 (thank you @jamesthurley!)
@@ -13,34 +19,54 @@ function wrapper(async) {
 
 describe('lib', () => {
 	describe('mock-data', () => {
-		let {randomData, comprehensiveData} = require('../../server/lib/mock-data');
-
 		describe('randomData', () => {
-			it('is random', () => {
+			it('has a random length', () => {
 				let arr1 = randomData();
 				let arr2 = randomData();
 				let arr3 = randomData();
 
 				expect(arr1.length === arr2.length === arr3.length).toBeFalsy();
 			});
+
+			it('is random', () => {
+				let arr1 = randomData();
+				let arr2 = randomData();
+
+				expect(arr1).not.toEqual(arr2);
+			});
 		});
 
 		describe('thoroughData', () => {
 			it('is thorough', () => {
+				let arr = comprehensiveData();
 
+				let types = _.map(arr, m => m.type);
+				let expected = ['Dryer', 'Washer'];
+				let actual = _.sort(_.intersection(types, expected), String, 'asc');
+				expect(actual).toBe(expected);
+
+				let statuses = _.map(arr, m => m.status);
+				expected = ['Almost Done', 'Available', 'End of Cycle', 'In Use'];
+				actual = _.sort(_.intersection(statuses, expected), String, 'asc');
+				expect(actual).toBe(expected);
+
+				let times = _.map(arr, m => m.time);
+				expected = [' ', '0 minutes left', '1 minute left', '5 minutes left']; // Just enough to represent all the statuses
+				actual = _.sort(_.intersection(times, expected), String, 'asc');
+				expect(actual).toBe(expected);
 			});
 
 			it('has a fixed length', () => {
 				let arr1 = comprehensiveData();
 				let arr2 = comprehensiveData();
 
-				expect(arr1.length).toEqual(arr2.length);
+				expect(arr1.length).toBe(arr2.length);
 			});
 		});
 	});
 
 	describe('scraper', () => {
-		let {scrapeLocations, getUrlFor, scrapeAllMachines, scrapeMachinesAt, get} = require('../../server/lib/scraper');
+		let get;
 
 		/**
 		 * We have no way of testing without consistent laundry data. When testing, ITaP may be offline,
@@ -48,8 +74,7 @@ describe('lib', () => {
 		 * We can't set up unit tests without knowing what to expect
 		 */
 		function setUpSpy(url) {
-			const fs = require('fs');
-			spyOn(this, get).and.callFake(async () => await fs.read(`../lib/${url}.html`));
+			get = spyOn(scraper, 'get').and.returnValue(fs.readFileSync(`../lib/${url}.html`));
 		}
 
 		// This isn't testing Redis - use a fake one
@@ -81,27 +106,26 @@ describe('lib', () => {
 
 			it('error', () => {
 				setUpSpy('error');
-				let actual = scrapeLocations(redis);
+				let actual = scraper.scrapeLocations(redis);
 				expect(actual).toBe([]);
 			});
 		});
 
 		describe('getUrlFor', () => {
 			beforeEach(() => {
-				let scrapeLocations = require('../../server/lib/scraper').scrapeLocations;
-				spyOn(this, scrapeLocations).and.callFake(() => [])
+				spyOn(scraper, 'scrapeLocations').and.returnValue(fs.readFileSync('../lib/locations.json'));
 			});
 
-			it('valid url', wrapper(async () => {
-				let url = await getUrlFor('Earhart Laundry Room', redis);
+			it('can return a url for a valid location', wrapper(async () => {
+				let url = await scraper.getUrlFor('Earhart Laundry Room', redis);
 
 				let root = 'http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx';
-				expect(url).toEqual(`${root}?location=a0728ede-60be-4155-8ca9-dcde37ad431d`);
+				expect(url).toBe(`${root}?location=a0728ede-60be-4155-8ca9-dcde37ad431d`);
 			}));
 
-			it('invalid url', wrapper(async () => {
-				let url = await getUrlFor('is this the krusty krab?');
-				expect(url).toEqual('');
+			it('returns nothing with an invalid location', wrapper(async () => {
+				let url = await scraper.getUrlFor('is this the krusty krab?');
+				expect(url).toBe('');
 			}));
 		});
 
