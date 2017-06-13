@@ -19,6 +19,7 @@
     "cheerio": "^0.19.0",
     "dogstatsd-node": "0.0.1",
     "express": "^4.13.3",
+    "karma-babel-preprocessor": "^6.0.1",
     "log4js": "^0.6.32",
     "loggly": "^1.1.0",
     "moment": "^2.10.6",
