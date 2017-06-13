@@ -1,4 +1,4 @@
-const cheerio = require('cheerio');
+import cheerio from 'cheerio';
 
 /**
  * This is the object used to represent a laundry machine
@@ -52,4 +52,4 @@ class Machine {
 	}
 }
 
-module.exports = Machine;
+export default Machine;

@@ -30,4 +30,4 @@ class Redis {
 	}
 }
 
-module.exports = Redis;
+export default Redis;
