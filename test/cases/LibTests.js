@@ -88,23 +88,33 @@ describe('lib', () => {
 		};
 
 		describe('scrapeLocations', () => {
-			it('just locations', wrapper(async () => {
+			let expected = JSON.parse(fs.readFileSync('../lib/locations.json', 'utf-8'));
+
+			it('can scrape just the locations', wrapper(async () => {
 				setUpSpy('just_locations');
+				const actual = scraper.scrapeLocations(redis);
+				expect(actual).toBe(expected);
 			}));
 
-			it('locations with some HTML fluff', () => {
+			it('can scrape locations with some HTML fluff', () => {
 				setUpSpy('locations_html_fluff');
+				const actual = scraper.scrapeLocations(redis);
+				expect(actual).toBe(expected);
 			});
 
-			it('locations with other option tags', () => {
+			it('can scrape locations with other option tags', () => {
 				setUpSpy('locations_other_option_tags');
+				const actual = scraper.scrapeLocations(redis);
+				expect(actual).toBe(expected);
 			});
 
-			it('whole page', () => {
+			it('can scrape a whole page', () => {
 				setUpSpy('whole_page');
+				const actual = scraper.scrapeLocations(redis);
+				expect(actual).toBe(expected);
 			});
 
-			it('error', () => {
+			it('returns an empty array when there is an error', () => {
 				setUpSpy('error');
 				let actual = scraper.scrapeLocations(redis);
 				expect(actual).toBe([]);
@@ -113,7 +123,8 @@ describe('lib', () => {
 
 		describe('getUrlFor', () => {
 			beforeEach(() => {
-				spyOn(scraper, 'scrapeLocations').and.returnValue(fs.readFileSync('../lib/locations.json'));
+				spyOn(scraper, 'scrapeLocations')
+					.and.returnValue(JSON.parse(fs.readFileSync('../lib/locations.json', 'utf-8')));
 			});
 
 			it('can return a url for a valid location', wrapper(async () => {
@@ -130,38 +141,59 @@ describe('lib', () => {
 		});
 
 		describe('scrapeAllMachines', () => {
+			const expected = JSON.parse(fs.readFileSync('../lib/machines.json', 'utf-8'));
+
 			it('just machines', () => {
 				setUpSpy('just_all_machines');
+				const actual = scraper.scrapeAllMachines(redis);
+				expect(actual).toBe(expected);
 			});
 
 			it('machines with fluff', () => {
 				setUpSpy('all_machines_fluff');
+				const actual = scraper.scrapeAllMachines(redis);
+				expect(actual).toBe(expected);
 			});
 
 			it('full page', () => {
 				setUpSpy('all_machines_full_page');
+				const actual = scraper.scrapeAllMachines(redis);
+				expect(actual).toBe(expected);
 			});
 
 			it('error', () => {
 				setUpSpy('error');
+				const actual = scraper.scrapeAllMachines(redis);
+				expect(actual).toBe(expected);
 			});
 		});
 
 		describe('scrapeMachinesAt', () => {
+			const expected = fs.readFileSync('../lib/machines-cary.json');
+			const location = 'Cary Quad East Laundry';
+
 			it('just machines', () => {
 				setUpSpy('just_machines');
+				const actual = scraper.scrapeMachinesAt(location);
+				expect(actual).toBe(expected);
 			});
 
 			it('machines with fluff', () => {
 				setUpSpy('machines_fluff');
+				const actual = scraper.scrapeMachinesAt(location);
+				expect(actual).toBe(expected);
 			});
 
 			it('full page', () => {
 				setUpSpy('full_page');
+				const actual = scraper.scrapeMachinesAt(location);
+				expect(actual).toBe(expected);
 			});
 
 			it('error', () => {
 				setUpSpy('error');
+				const actual = scraper.scrapeMachinesAt(location);
+				expect(actual).toBe(expected);
 			});
 		});
 	});
