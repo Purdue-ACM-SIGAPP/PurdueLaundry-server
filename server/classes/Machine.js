@@ -13,8 +13,6 @@ const cheerio = require('cheerio');
  */
 class Machine {
 	constructor(name, displayName, type, status, time) {
-		console.log(name);
-
 		this.name = name;
 		this.displayName = displayName;
 		this.type = type;

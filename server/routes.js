@@ -23,7 +23,7 @@ module.exports = (app, redis) => {
 	 * request. If it hasn't, it calls next to execute the request as normal.
 	 */
 	async function checkCache(req, res, next) {
-		console.time(req.route);
+		// TODO time tracking
 
 		let exists = await redis.exists(req.path);
 		if (exists) {
@@ -44,7 +44,7 @@ module.exports = (app, redis) => {
 		res.oldSend = res.send;
 
 		res.send = data => {
-			console.timeEnd(req.path);
+			// todo time tracking
 
 			redis.redis.set(req.path, JSON.stringify(data));
 			redis.redis.expire(req.path, 1000 * 60);

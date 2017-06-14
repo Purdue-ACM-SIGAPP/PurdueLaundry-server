@@ -1,3 +1,4 @@
+/* eslint-env jasmine */
 const SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
 // Remove default reporter logs

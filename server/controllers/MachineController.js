@@ -3,15 +3,11 @@ const {scrapeAllMachines, scrapeMachinesAt, getUrlFor} = require('../lib/scraper
 async function getMachines(req, res) {
 	// Logging
 	req.logger.info({type: 'GET', location: 'all'});
-	console.time('allStart');
 
 	// Get the machines
 	let machines = await scrapeAllMachines(req.redis);
 
-	console.log(machines);
-
-	// Clock in and send response
-	console.timeEnd('allStart');
+	// Clock in and send response TODO: Times
 	res.json(machines);
 }
 

@@ -28,6 +28,6 @@
 		],
 		"use-isnan": "error",
 		"eqeqeq": "error",
-		"no-console": "off"
+		"no-console": "error"
 	}
 }

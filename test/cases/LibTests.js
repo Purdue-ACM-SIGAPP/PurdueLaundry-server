@@ -1,8 +1,8 @@
 /* eslint-env jasmine */
-import * as scraper from '../../server/lib/scraper';
-import {randomData, comprehensiveData} from '../../server/lib/mock-data';
-import fs from 'fs';
-import _ from 'lodash';
+const scraper = require('../../server/lib/scraper');
+const {randomData, comprehensiveData} = require('../../server/lib/mock-data');
+const fs = require('fs');
+const _ = require('lodash');
 
 /**
  * Unfortunately, Jasmine doesn't natively support async/await, so we have to use this convenient wrapper function

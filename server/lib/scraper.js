@@ -75,8 +75,6 @@ async function scrapeAllMachines(redis) {
 			let results = parseHtml(body);
 			machines[location.name] = results;
 
-			console.log(results);
-
 			// Cache the results for 1 minute
 			redis.redis.set(location.name, JSON.stringify(results));
 			redis.redis.expire(location.name, 60 * 1000);

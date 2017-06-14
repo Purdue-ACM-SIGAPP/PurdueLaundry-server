@@ -1,8 +1,3 @@
-// Print the ASCII art
-const fs = require('fs');
-const art = fs.readFileSync('./ascii-art.txt', 'utf-8');
-console.log(art);
-
 // Initialize Express
 const express = require('express');
 const app = express();
@@ -55,3 +50,8 @@ app.use((req, res, next) => {
 
 // Set up routes
 require('./server/routes')(app, r);
+
+// Print the ASCII art
+const fs = require('fs');
+const art = fs.readFileSync('./ascii-art.txt', 'utf-8');
+logger.info(art);

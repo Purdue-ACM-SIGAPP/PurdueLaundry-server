@@ -1,3 +1,4 @@
+/* eslint-env jasmine */
 beforeEach(function() {
 	jasmine.addMatchers({
 		toBeTheSameMachineAs: function () {
