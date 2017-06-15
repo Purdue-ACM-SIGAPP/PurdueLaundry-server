@@ -1,13 +1,6 @@
-/* eslint-env jasmine */
-/**
- * Unfortunately, Jasmine doesn't natively support async/await, so we have to use this convenient wrapper function
- * that I *totally* didn't steal off of https://github.com/jasmine/jasmine/issues/923 (thank you @jamesthurley!)
- */
-function wrapper(async) {
-	return done => {
-		async().then(done, e => { fail(e); done(); });
-	};
-}
+/* eslint-env mocha */
+const should = require('chai').should();
+const Machine = require('../../server/classes/Machine');
 
 describe('Controllers', () => {
 	/**
@@ -17,46 +10,63 @@ describe('Controllers', () => {
 	 *
 	 * res.send and res.json have been mapped to different functions that simply store the result in the variable 'result'
 	 */
-	const req = {};
+	const req = {
+		logger: {
+			info: () => null
+		},
+		redis: {
+			exists: () => 0,
+			get: () => null,
+			redis: {
+				set: () => null,
+				expire: () => null
+			}
+		}
+	};
 
 	let result;
 	const res = {
-		send: stuff => result = stuff
+		send: stuff => result = stuff,
+		json: stuff => result = stuff
 	};
 
 	describe('MachineController', () => {
 		const MachineController = require('../../server/controllers/MachineController');
 
 		describe('getMachines', () => {
-			it('doesn\'t throw an error', wrapper(async () => {
-				expect(await MachineController.getMachines(req, res)).not.toThrow();
-			}));
+			it('doesn\'t throw an error', async () => {
+				should.not.Throw(await MachineController.getMachines(req, res));
+			});
 
-			it('gets more than 1 location', wrapper(async () => {
+			it('gets more than 1 location', async () => {
 				await MachineController.getMachines(req, res);
-				expect(Object.keys(result).length).toBeGreaterThan(1);
-			}));
+				Object.keys(result).length.should.be.greaterThan(1);
+			});
 
-			it('returns Machine objects', wrapper(async () => {
+			it('returns Machine objects', async () => {
 				await MachineController.getMachines(req, res);
-				result.forEach(m => expect(typeof m).toBe('Machine'));
-			}));
+				for (let m of result) {
+					m.should.be.an.instanceOf(Machine);
+				}
+			});
 		});
 
 		describe('getMachinesAtLocation', () => {
-			it('doesn\t throw an error', wrapper(async () => {
-				expect(await MachineController.getMachinesAtLocation(req, res)).not.toThrow();
-			}));
+			it('doesn\t throw an error', async () => {
+				should.not.Throw(await MachineController.getMachinesAtLocation(req, res));
+			});
 
-			it('gets 1 location', wrapper(async () => {
+			it('gets 1 location', async () => {
 				await MachineController.getMachines(req, res);
-				expect(Object.keys(result).length).toBe(1);
-			}));
+				Object.keys(result).length.should.equal(1);
+			});
 
-			it('returns Machine objects', wrapper(async () => {
+			it('returns Machine objects', async () => {
 				await MachineController.getMachines(req, res);
-				result.forEach(m => expect(typeof m).toBe('Machine'));
-			}));
+				for (let m of result) {
+					m.should.be.an.instanceOf(Machine);
+				}
+			});
 		});
 
 		describe('getPossibleStatuses', () => {
@@ -64,7 +74,7 @@ describe('Controllers', () => {
 				MachineController.getPossibleStatuses(req, res);
 				const expected = ['Available', 'In Use', 'Almost Done', 'End of Cycle', 'Out of Order', 'Offline', 'Ready To Start'];
 
-				expect(result).toBe(expected);
+				result.should.have.members(expected);
 			});
 		});
 	});

@@ -1,13 +1,5 @@
-/* eslint-env jasmine */
-/**
- * Unfortunately, Jasmine doesn't natively support async/await, so we have to use this convenient wrapper function
- * that I *totally* didn't steal off of https://github.com/jasmine/jasmine/issues/923 (thank you @jamesthurley!)
- */
-function wrapper(async) {
-	return done => {
-		async().then(done, e => { fail(e); done(); });
-	};
-}
+/* eslint-env mocha */
+const should = require('chai').should();
 
 describe('Classes', () => {
 	describe('Redis', () => {
@@ -26,26 +18,26 @@ describe('Classes', () => {
 		});
 
 		it('constructor', () => {
-			expect(redis.hasOwnProperty('get')).toBeTruthy();
-			expect(redis.hasOwnProperty('exists')).toBeTruthy();
-			expect(redis.hasOwnProperty('redis')).toBeTruthy();
+			redis.should.have.own.property('get');
+			redis.should.have.own.property('exists');
+			redis.should.have.own.property('redis');
 
-			expect(redis.hasOwnProperty('set')).toBeFalsy();
-			expect(redis.hasOwnProperty('expires')).toBeFalsy();
+			redis.should.not.have.own.property('set');
+			redis.should.not.have.own.property('expires');
 		});
 
 		describe('get', () => {
-			it('something stored', wrapper(async () => {
+			it('something stored', async () => {
 				const key = 'meaning of life, the universe, and everything';
 				const value = 42;
 
 				redis.redis.set(key, value);
 				let result = await redis.get(key);
 
-				expect(result).toBe(value);
-			}));
+				result.should.equal(value);
+			});
 
-			it('something expired', wrapper(async () => {
+			it('something expired', async () => {
 				const key = 'meaning of life, the universe, and everything';
 				const value = 42;
 
@@ -57,31 +49,31 @@ describe('Classes', () => {
 
 				let result = await redis.get(key);
 
-				expect(result).not.toBe(value);
-			}));
+				result.should.not.equal(value);
+			});
 
-			it('something never stored', wrapper(async () => {
+			it('something never stored', async () => {
 				const key = 'meaning of life, the universe, and everything';
 				const value = 42;
 
 				let result = await redis.get(key);
 
-				expect(result).not.toBe(value);
-			}));
+				result.should.not.equal(value);
+			});
 		});
 
 		describe('exists', () => {
-			it('something stored', wrapper(async () => {
+			it('something stored', async () => {
 				const key = 'meaning of life, the universe, and everything';
 				const value = 42;
 
 				redis.redis.set(key, value);
 				let result = await redis.exists(key);
 
-				expect(result).toBe(1);
-			}));
+				result.should.equal(1);
+			});
 
-			it('something expired', wrapper(async () => {
+			it('something expired', async () => {
 				const key = 'meaning of life, the universe, and everything';
 				const value = 42;
 
@@ -93,16 +85,16 @@ describe('Classes', () => {
 
 				let result = await redis.exists(key);
 
-				expect(result).toBe(0);
-			}));
+				result.should.equal(0);
+			});
 
-			it('something never stored', wrapper(async () => {
+			it('something never stored', async () => {
 				const key = 'meaning of life, the universe, and everything';
 
 				let result = await redis.exists(key);
 
-				expect(result).toBe(0);
-			}));
+				result.should.equal(0);
+			});
 		});
 	});
 
@@ -118,11 +110,11 @@ describe('Classes', () => {
 
 			const m = new Machine(name, displayName, type, status, time);
 
-			expect(m.name).toBe(name);
-			expect(m.displayName).toBe(displayName);
-			expect(m.type).toBe(type);
-			expect(m.status).toBe(status);
-			expect(m.time).toBe(time);
+			m.name.should.equal(name);
+			m.displayName.should.equal(displayName);
+			m.type.should.equal(type);
+			m.status.should.equal(status);
+			m.time.should.equal(time);
 		});
 
 		describe('parser', () => {
@@ -135,7 +127,7 @@ describe('Classes', () => {
 				];
 
 				let machines = Machine.parse(webpage);
-				expect(machines).toEqual(expected);
+				machines.should.have.members(expected);
 			});
 
 			it('machines with some other rows', () => {
@@ -147,7 +139,7 @@ describe('Classes', () => {
 				];
 
 				let machines = Machine.parse(webpage);
-				expect(machines).toEqual(expected);
+				machines.should.have.members(expected);
 			});
 
 			it('a whole web page', () => {
@@ -159,7 +151,7 @@ describe('Classes', () => {
 				];
 
 				let machines = Machine.parse(webpage);
-				expect(machines).toEqual(expected);
+				machines.should.have.members(expected);
 			});
 
 			it('404 (no machines)', () => {
@@ -170,7 +162,7 @@ describe('Classes', () => {
 				const expected = [];
 
 				let machines = Machine.parse(webpage);
-				expect(machines).toEqual(expected);
+				machines.should.have.members(expected);
 			});
 		});
 	});
