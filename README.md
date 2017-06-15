@@ -11,10 +11,11 @@ Our server is Dockerized, so running it will require you to install
 for instructions on how to do that. It's fairly well documented
 and painless. 
 
-Once you have those 2 dependencies installed, you can build and run
+Once you have those 2 dependencies installed, you can install dependencies and build and run
 the server by simply running:
 
-    $ npm start
+    $ yarn
+    $ yarn start
     
 **If you are running Ubuntu:** there are special instructions that
 you need to install Docker. Look to `install-docker-ubuntu.sh` for those instructions.
@@ -35,7 +36,7 @@ First, do the following:
 
 Once those things are installed, just run:
 
-    $ npm run start-vanilla
+    $ yarn run start-vanilla
     
 ***Important:*** This method of running the server will not be
 supported. There are a lot of dependencies for this project
@@ -49,7 +50,7 @@ yourself or just install Docker. Sorry.
 
 To run all tests, simply run:
 
-    $ npm test
+    $ yarn test
 
 A summary of the tests will be displayed in `stdout`. 
 

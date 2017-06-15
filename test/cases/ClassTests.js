@@ -29,7 +29,7 @@ describe('Classes', () => {
 		describe('get', () => {
 			it('something stored', async () => {
 				const key = 'meaning of life, the universe, and everything';
-				const value = 42;
+				const value = '42';
 
 				redis.redis.set(key, value);
 				let result = await redis.get(key);
@@ -42,10 +42,10 @@ describe('Classes', () => {
 				const value = 42;
 
 				redis.redis.set(key, value);
-				redis.redis.expire(key, 2000);
+				redis.redis.expire(key, 500);
 
 				// Sleep for 3 seconds, just in case 2 isn't enough
-				await new Promise(resolve => setTimeout(resolve, 3000));
+				await new Promise(resolve => setTimeout(resolve, 1000));
 
 				let result = await redis.get(key);
 
@@ -78,10 +78,10 @@ describe('Classes', () => {
 				const value = 42;
 
 				redis.redis.set(key, value);
-				redis.redis.expire(key, 2000);
+				redis.redis.expire(key, 500);
 
 				// Sleep for 3 seconds, just in case 2 isn't enough
-				await new Promise(resolve => setTimeout(resolve, 3000));
+				await new Promise(resolve => setTimeout(resolve, 1000));
 
 				let result = await redis.exists(key);
 
@@ -89,7 +89,7 @@ describe('Classes', () => {
 			});
 
 			it('something never stored', async () => {
-				const key = 'meaning of life, the universe, and everything';
+				const key = 'a great block of code';
 
 				let result = await redis.exists(key);
 
