@@ -36,7 +36,7 @@ describe('lib', () => {
 				actual.should.have.members(expected);
 
 				let statuses = _.map(arr, m => m.status);
-				expected = ['Almost Done', 'Available', 'End of Cycle', 'In Use'];
+				expected = ['Almost Done', 'Available', 'End of Cycle', 'In use'];
 				actual = _.sortBy(_.intersection(statuses, expected), String, 'asc');
 				actual.should.have.members(expected);
 
@@ -111,7 +111,6 @@ describe('lib', () => {
 		describe('getUrlFor', () => {
 			beforeEach(() => {
 				nock('http://wpvitassuds01.itap.purdue.edu/')
-					.persist()
 					.get(/.*/)
 					.query(true)
 					.reply(200, JSON.parse(fs.readFileSync('../lib/locations.json', 'utf-8')));

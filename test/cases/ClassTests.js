@@ -1,15 +1,18 @@
 /* eslint-env mocha */
-// eslint-disable-next-line
 const should = require('chai').should();
+const fs = require('fs');
 
 describe('Classes', () => {
 	describe('Redis', () => {
 		const r = require('redis');
 		let redis;
 		const Redis = require('../../server/classes/Redis');
+		const key = 'meaning of life, the universe, and everything';
+		const value = '42';
 
-		beforeEach(() => {
+		beforeEach(async () => {
 			const client = r.createClient();
+			await new Promise((resolve,) => client.flushdb(() => resolve()));
 			redis = new Redis(client);
 		});
 
@@ -23,72 +26,51 @@ describe('Classes', () => {
 		});
 
 		describe('get', () => {
-			it('something stored', async () => {
-				const key = 'meaning of life, the universe, and everything';
-				const value = '42';
+			beforeEach(async () => await new Promise((resolve,) => redis.redis.flushdb(() => resolve())));
 
+			it('something stored', async () => {
 				redis.redis.set(key, value);
 				let result = await redis.get(key);
-
 				result.should.equal(value);
 			});
 
 			it('something expired', async () => {
-				const key = 'meaning of life, the universe, and everything';
-				const value = 42;
-
 				redis.redis.set(key, value);
-				redis.redis.expire(key, 500);
+				redis.redis.expire(key, 1);
 
 				// Sleep for 3 seconds, just in case 2 isn't enough
-				await new Promise(resolve => setTimeout(resolve, 1000));
-
+				await new Promise(resolve => setTimeout(resolve, 1250));
 				let result = await redis.get(key);
-
-				result.should.not.equal(value);
+				should.not.exist(result);
 			});
 
 			it('something never stored', async () => {
-				const key = 'meaning of life, the universe, and everything';
-				const value = 42;
-
 				let result = await redis.get(key);
-
-				result.should.not.equal(value);
+				should.not.exist(result);
 			});
 		});
 
 		describe('exists', () => {
-			it('something stored', async () => {
-				const key = 'meaning of life, the universe, and everything';
-				const value = 42;
+			beforeEach(async () => await new Promise((resolve,) => redis.redis.flushdb(() => resolve())));
 
+			it('something stored', async () => {
 				redis.redis.set(key, value);
 				let result = await redis.exists(key);
-
 				result.should.equal(1);
 			});
 
 			it('something expired', async () => {
-				const key = 'meaning of life, the universe, and everything';
-				const value = 42;
-
 				redis.redis.set(key, value);
-				redis.redis.expire(key, 500);
+				redis.redis.expire(key, 1);
 
 				// Sleep for 3 seconds, just in case 2 isn't enough
-				await new Promise(resolve => setTimeout(resolve, 1000));
-
+				await new Promise(resolve => setTimeout(resolve, 1250));
 				let result = await redis.exists(key);
-
 				result.should.equal(0);
 			});
 
 			it('something never stored', async () => {
-				const key = 'a great block of code';
-
 				let result = await redis.exists(key);
-
 				result.should.equal(0);
 			});
 		});
@@ -114,6 +96,18 @@ describe('Classes', () => {
 		});
 
 		describe('parser', () => {
+			const tests = [
+				{name: '', page: '', machines: ''}
+			];
+
+			tests.forEach(t => {
+				it(t.name, () => {
+					const actual = Machine.parse(fs.readFileSync(`${t.page}.html`));
+					const expected = JSON.parse(fs.readFileSync(`${t.machines}.json`));
+					actual.should.have.deep.members(expected);
+				});
+			});
+
 			it('just machines', () => {
 				const webpage = `
 					<li>Hello</li>

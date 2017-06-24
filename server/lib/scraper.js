@@ -43,7 +43,7 @@ async function scrapeLocations(redis) {
  */
 async function getUrlFor(location, redis) {
 	let locations = await scrapeLocations(redis);
-	return locations.reduce((acc, item) => item.name === location ? item.url : '');
+	return locations.find(item => item.name === location).url;
 }
 
 /**
@@ -89,7 +89,7 @@ async function scrapeMachinesAt(location, redis) {
 	let exists = await redis.exists(location);
 	if (exists === 0) {
 		// Get page contents
-		let url = await getUrlFor(location);
+		let url = await getUrlFor(location, redis);
 		let body = await request(url);
 
 		// Use our fancy parsing function

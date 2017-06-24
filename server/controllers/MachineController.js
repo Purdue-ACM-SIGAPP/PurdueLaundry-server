@@ -16,7 +16,7 @@ async function getMachinesAtLocation(req, res) {
 	req.logger.info({type: 'GET', location: req.params.location});
 
 	// Get the URL for this location
-	let url = await getUrlFor(req.params.location, req);
+	let url = await getUrlFor(req.params.location, req.redis);
 	if (url === undefined) {
 		req.logger.err('Incorrect URL');
 		res.status(404).send('Error');
