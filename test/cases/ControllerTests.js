@@ -37,8 +37,8 @@ describe('Controllers', () => {
 		const MachineController = require('../../server/controllers/MachineController');
 
 		describe('getMachines', () => {
-			xit('doesn\'t throw an error', async () => {
-				should.not.Throw(await MachineController.getMachines(req, res));
+			it('doesn\'t throw an error', () => {
+				(async () => await MachineController.getMachines(req, res)).should.not.Throw();
 			});
 
 			it('gets more than 1 location', async () => {
@@ -55,8 +55,8 @@ describe('Controllers', () => {
 		});
 
 		describe('getMachinesAtLocation', () => {
-			xit('doesn\'t throw an error', async () => {
-				should.not.Throw(await MachineController.getMachinesAtLocation(req, res));
+			it('doesn\'t throw an error', async () => {
+				(async () => await MachineController.getMachinesAtLocation(req, res)).should.not.Throw();
 			});
 
 			it('gets 1 location', async () => {

@@ -82,10 +82,10 @@ describe('lib', () => {
 		/**
 		 * Useful for generating tests
 		 */
-		function runTest(test, f, arg, expected) {
+		function runTest(test, f, args, expected) {
 			it(test.name, () => {
 				setUpSpy(test.spy);
-				const actual = f(arg);
+				const actual = f.apply(this, args);
 				actual.should.deep.equal(expected);
 			});
 		}
@@ -96,11 +96,16 @@ describe('lib', () => {
 				{name: 'can scrape just the locations', spy: 'just_locations'},
 				{name: 'can scrape locations with some HTML fluff', spy: 'locations_html_fluff'},
 				{name: 'can scrape locations with other option tags', spy: 'locations_other_option_tags'},
-				{name: 'can scrape a whole page', spy: 'whole_page'},
-				{name: 'returns an empty array when there is an error', spy: 'error'}
+				{name: 'can scrape a whole page', spy: 'whole_page'}
 			];
 
-			tests.forEach(test => runTest(test, scraper.scrapeLocations, redis, expected));
+			tests.forEach(test => runTest(test, scraper.scrapeLocations, [redis], expected));
+
+			it('returns an empty object when there is an error', () => {
+				setUpSpy('error');
+				const actual = scraper.scrapeLocations(redis);
+				actual.should.deep.equal({});
+			});
 
 			it('should be consistent with Purdue\'s API', async () => {
 				const actual = await scraper.scrapeLocations(redis);
@@ -110,10 +115,10 @@ describe('lib', () => {
 
 		describe('getUrlFor', () => {
 			beforeEach(() => {
-				nock('http://wpvitassuds01.itap.purdue.edu/')
-					.get(/.*/)
-					.query(true)
-					.reply(200, JSON.parse(fs.readFileSync('../lib/locations.json', 'utf-8')));
+				// nock('http://wpvitassuds01.itap.purdue.edu/')
+				// 	.get(/.*/)
+				// 	.query(true)
+				// 	.reply(200, fs.readFileSync('../lib/just_locations.html', 'utf-8'));
 			});
 
 			it('can return a url for a valid location', async () => {
@@ -124,7 +129,7 @@ describe('lib', () => {
 			});
 
 			it('returns nothing with an invalid location', async () => {
-				let url = await scraper.getUrlFor('is this the krusty krab?');
+				let url = await scraper.getUrlFor('is this the krusty krab?', redis);
 				url.should.equal('');
 			});
 		});
@@ -134,11 +139,16 @@ describe('lib', () => {
 			const tests = [
 				{name: 'just machines', spy: 'just_all_machines'},
 				{name: 'machines with fluff', spy: 'all_machines_fluff'},
-				{name: 'full page', spy: 'whole_page'},
-				{name: 'error', spy: 'error'}
+				{name: 'full page', spy: 'whole_page'}
 			];
 
-			tests.forEach(test => runTest(test, scraper.scrapeAllMachines, redis, expected));
+			tests.forEach(test => runTest(test, scraper.scrapeAllMachines, [redis], expected));
+
+			it('should return an empty object on an error', () => {
+				setUpSpy('error');
+				const actual = scraper.scrapeAllMachines(redis);
+				actual.should.deep.equal({});
+			});
 
 			it('should be consistent with Purdue\'s API', async () => {
 				const actual = await scraper.scrapeAllMachines(redis);
@@ -152,14 +162,19 @@ describe('lib', () => {
 			const tests = [
 				{name: 'just machines', spy: 'just_machines'},
 				{name: 'machines with fluff', spy: 'machines_fluff'},
-				{name: 'full page', spy: 'full_page'},
-				{name: 'error', spy: 'error'}
+				{name: 'full page', spy: 'full_page'}
 			];
 
-			tests.forEach(test => runTest(test, scraper.scrapeMachinesAt, location, expected));
+			tests.forEach(test => runTest(test, scraper.scrapeMachinesAt, [location, redis], expected));
+
+			it('should return an empty object on an error', () => {
+				setUpSpy('error');
+				const actual = scraper.scrapeMachinesAt(location, redis);
+				actual.should.deep.equal({});
+			});
 
 			it('should be consistent with Purdue\'s API', async () => {
-				const actual = await scraper.scrapeMachinesAt(location);
+				const actual = await scraper.scrapeMachinesAt(location, redis);
 				actual.should.deep.equal(expected);
 			});
 		});

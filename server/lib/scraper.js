@@ -19,16 +19,14 @@ async function scrapeLocations(redis) {
 		let $ = cheerio.load(html);
 
 		// Turn the `select` options into a fancy array
-		let locations = Array.from($('#locationSelector').find('option')).map(e => {
-			return {
-				'name': e.children[0].data,
-				'url': url + '?location=' + e.attribs.value
-			};
-		});
+		let locations = Array.from($('#locationSelector').find('option')).map(e => ({
+			'name': e.children[0].data,
+			'url': url + '?location=' + e.attribs.value
+		}));
 
 		// Cache the results. The results are cached for 1 month because they don't change frequently
 		redis.redis.set(key, JSON.stringify(locations));
-		redis.redis.expire(key, 1000 * 60 * 60 * 24 * 30);
+		redis.redis.expire(key, 60 * 60 * 24 * 30);
 		return locations;
 	} else {
 		// Great, they were cached! No HTTP requests today, Satan!
@@ -37,13 +35,13 @@ async function scrapeLocations(redis) {
 }
 
 /**
- * Arrays of objects are weird to deal with, so this method takes in a location, scrapes the URLs, then does
- * what is probably considered atypical usage of Array.reduce to reduce the array to a single object that is the
- * requested location
+ * Arrays of objects are weird to deal with, so this method takes in a location, scrapes the URLs, then uses Array.find
+ * to find our object
  */
 async function getUrlFor(location, redis) {
-	let locations = await scrapeLocations(redis);
-	return locations.find(item => item.name === location).url;
+	const locations = await scrapeLocations(redis);
+	const l = locations.find(l => l.name === location);
+	return l ? l.url : '';
 }
 
 /**

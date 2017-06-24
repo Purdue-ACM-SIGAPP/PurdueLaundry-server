@@ -97,13 +97,13 @@ describe('Classes', () => {
 
 		describe('parser', () => {
 			const tests = [
-				{name: '', page: '', machines: ''}
+				// {name: '', page: '', machines: ''}
 			];
 
 			tests.forEach(t => {
 				it(t.name, () => {
-					const actual = Machine.parse(fs.readFileSync(`${t.page}.html`));
-					const expected = JSON.parse(fs.readFileSync(`${t.machines}.json`));
+					const actual = Machine.parse(fs.readFileSync(`../lib/${t.page}.html`));
+					const expected = JSON.parse(fs.readFileSync(`../lib/${t.machines}.json`));
 					actual.should.have.deep.members(expected);
 				});
 			});
