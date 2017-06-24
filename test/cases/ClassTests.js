@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+// eslint-disable-next-line
 const should = require('chai').should();
 
 describe('Classes', () => {
@@ -8,22 +9,17 @@ describe('Classes', () => {
 		const Redis = require('../../server/classes/Redis');
 
 		beforeEach(() => {
-			const redisOptions = {
-				host: 'redis',
-				port: 6379,
-				total_retry_time: 300000
-			};
-			const client = r.createClient(redisOptions);
+			const client = r.createClient();
 			redis = new Redis(client);
 		});
 
 		it('constructor', () => {
-			redis.should.have.own.property('get');
-			redis.should.have.own.property('exists');
-			redis.should.have.own.property('redis');
+			redis.should.have.property('get');
+			redis.should.have.property('exists');
+			redis.should.have.property('redis');
 
-			redis.should.not.have.own.property('set');
-			redis.should.not.have.own.property('expires');
+			redis.should.not.have.property('set');
+			redis.should.not.have.property('expires');
 		});
 
 		describe('get', () => {

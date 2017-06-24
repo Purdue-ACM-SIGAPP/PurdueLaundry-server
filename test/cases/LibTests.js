@@ -56,6 +56,16 @@ describe('lib', () => {
 	});
 
 	describe('scraper', () => {
+		// This isn't testing Redis - use a fake one
+		let redis = {
+			get: () => null,
+			exists: () => 0,
+			redis: {
+				set: () => null,
+				expire: () => null
+			}
+		};
+
 		/**
 		 * We have no way of testing without consistent laundry data. When testing, ITaP may be offline,
 		 * the testing computer may not have an internet connection, and we need to know what to test for.
@@ -69,52 +79,32 @@ describe('lib', () => {
 				.reply(200, fs.readFileSync(`../lib/${url}.html`));
 		}
 
-		// This isn't testing Redis - use a fake one
-		let redis = {
-			get: () => null,
-			exists: () => 0,
-			redis: {
-				set: () => null,
-				expire: () => null
-			}
-		};
+		/**
+		 * Useful for generating tests
+		 */
+		function runTest(test, f, arg, expected) {
+			it(test.name, () => {
+				setUpSpy(test.spy);
+				const actual = f(arg);
+				actual.should.deep.equal(expected);
+			});
+		}
 
 		describe('scrapeLocations', () => {
-			let expected = JSON.parse(fs.readFileSync('../lib/locations.json', 'utf-8'));
+			const expected = JSON.parse(fs.readFileSync('../lib/locations.json', 'utf-8'));
+			const tests = [
+				{name: 'can scrape just the locations', spy: 'just_locations'},
+				{name: 'can scrape locations with some HTML fluff', spy: 'locations_html_fluff'},
+				{name: 'can scrape locations with other option tags', spy: 'locations_other_option_tags'},
+				{name: 'can scrape a whole page', spy: 'whole_page'},
+				{name: 'returns an empty array when there is an error', spy: 'error'}
+			];
 
-			it('can scrape just the locations', () => {
-				setUpSpy('just_locations');
-				const actual = scraper.scrapeLocations(redis);
-				actual.should.have.deep.members(expected);
-			});
-
-			it('can scrape locations with some HTML fluff', () => {
-				setUpSpy('locations_html_fluff');
-				const actual = scraper.scrapeLocations(redis);
-				actual.should.have.deep.members(expected);
-			});
-
-			it('can scrape locations with other option tags', () => {
-				setUpSpy('locations_other_option_tags');
-				const actual = scraper.scrapeLocations(redis);
-				actual.should.have.deep.members(expected);
-			});
-
-			it('can scrape a whole page', () => {
-				setUpSpy('whole_page');
-				const actual = scraper.scrapeLocations(redis);
-				actual.should.have.deep.members(expected);
-			});
-
-			it('returns an empty array when there is an error', () => {
-				setUpSpy('error');
-				let actual = scraper.scrapeLocations(redis);
-				actual.should.have.deep.members([]);
-			});
+			tests.forEach(test => runTest(test, scraper.scrapeLocations, redis, expected));
 
 			it('should be consistent with Purdue\'s API', async () => {
 				const actual = await scraper.scrapeLocations(redis);
-				actual.should.have.deep.members(expected);
+				actual.should.deep.equal(expected);
 			});
 		});
 
@@ -142,30 +132,14 @@ describe('lib', () => {
 
 		describe('scrapeAllMachines', () => {
 			const expected = JSON.parse(fs.readFileSync('../lib/machines.json', 'utf-8'));
+			const tests = [
+				{name: 'just machines', spy: 'just_all_machines'},
+				{name: 'machines with fluff', spy: 'all_machines_fluff'},
+				{name: 'full page', spy: 'whole_page'},
+				{name: 'error', spy: 'error'}
+			];
 
-			it('just machines', () => {
-				setUpSpy('just_all_machines');
-				const actual = scraper.scrapeAllMachines(redis);
-				actual.should.deep.equal(expected);
-			});
-
-			it('machines with fluff', () => {
-				setUpSpy('all_machines_fluff');
-				const actual = scraper.scrapeAllMachines(redis);
-				actual.should.deep.equal(expected);
-			});
-
-			it('full page', () => {
-				setUpSpy('all_machines_full_page');
-				const actual = scraper.scrapeAllMachines(redis);
-				actual.should.deep.equal(expected);
-			});
-
-			it('error', () => {
-				setUpSpy('error');
-				const actual = scraper.scrapeAllMachines(redis);
-				actual.should.deep.equal(expected);
-			});
+			tests.forEach(test => runTest(test, scraper.scrapeAllMachines, redis, expected));
 
 			it('should be consistent with Purdue\'s API', async () => {
 				const actual = await scraper.scrapeAllMachines(redis);
@@ -176,30 +150,14 @@ describe('lib', () => {
 		describe('scrapeMachinesAt', () => {
 			const expected = fs.readFileSync('../lib/machines-cary.json');
 			const location = 'Cary Quad East Laundry';
+			const tests = [
+				{name: 'just machines', spy: 'just_machines'},
+				{name: 'machines with fluff', spy: 'machines_fluff'},
+				{name: 'full page', spy: 'full_page'},
+				{name: 'error', spy: 'error'}
+			];
 
-			it('just machines', () => {
-				setUpSpy('just_machines');
-				const actual = scraper.scrapeMachinesAt(location);
-				actual.should.deep.equal(expected);
-			});
-
-			it('machines with fluff', () => {
-				setUpSpy('machines_fluff');
-				const actual = scraper.scrapeMachinesAt(location);
-				actual.should.deep.equal(expected);
-			});
-
-			it('full page', () => {
-				setUpSpy('full_page');
-				const actual = scraper.scrapeMachinesAt(location);
-				actual.should.deep.equal(expected);
-			});
-
-			it('error', () => {
-				setUpSpy('error');
-				const actual = scraper.scrapeMachinesAt(location);
-				actual.should.deep.equal(expected);
-			});
+			tests.forEach(test => runTest(test, scraper.scrapeMachinesAt, location, expected));
 
 			it('should be consistent with Purdue\'s API', async () => {
 				const actual = await scraper.scrapeMachinesAt(location);
