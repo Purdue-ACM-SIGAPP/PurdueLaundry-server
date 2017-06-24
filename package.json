@@ -8,8 +8,8 @@
     "prestart": "docker-compose build",
     "start": "docker-compose up",
     "start:vanilla": "pm2 start processes.json --no-daemon",
-    "test": "npm run jasmine && npm run eslint",
-    "jasmine": "jasmine JASMINE_CONFIG_PATH=./jasmine.json",
+    "test": "npm run mocha && npm run eslint",
+    "mocha": "mocha test/cases/*",
     "eslint": "node_modules/.bin/eslint server/* app.js"
   },
   "author": "Purdue ACM SigApp <acm@purdue.edu>",

@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+// eslint-disable-next-line
 const should = require('chai').should();
 const Machine = require('../../server/classes/Machine');
 

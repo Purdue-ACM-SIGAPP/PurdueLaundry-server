@@ -1,6 +1,9 @@
 /* eslint-env mocha */
 const should = require('chai').should();
 const fs = require('fs');
+const path = require('path')
+
+const read = p => fs.readFileSync(path.resolve(__dirname, p));
 
 describe('Classes', () => {
 	describe('Redis', () => {
@@ -95,64 +98,25 @@ describe('Classes', () => {
 			m.time.should.equal(time);
 		});
 
-		describe('parser', () => {
+		describe('parse', () => {
 			const tests = [
-				// {name: '', page: '', machines: ''}
+				{name: 'can parse just machines', page: 'just_machines'},
+				{name: 'can parse machines with other rows', page: 'machines_fluff'},
+				{name: 'can parse a whole page', page: 'whole_page'}
 			];
 
 			tests.forEach(t => {
 				it(t.name, () => {
-					const actual = Machine.parse(fs.readFileSync(`../lib/${t.page}.html`));
-					const expected = JSON.parse(fs.readFileSync(`../lib/${t.machines}.json`));
+					const actual = Machine.parse(read(`../lib/${t.page}.html`));
+					const expected = JSON.parse(read('../lib/machines-earhart.json'));
 					actual.should.have.deep.members(expected);
 				});
 			});
 
-			it('just machines', () => {
-				const webpage = `
-					<li>Hello</li>
-				`;
-				const expected = [
-					new Machine(0, 0, 0, 0, 0)
-				];
-
-				let machines = Machine.parse(webpage);
-				machines.should.have.members(expected);
-			});
-
-			it('machines with some other rows', () => {
-				const webpage = `
-					<li>Hello</li>
-				`;
-				const expected = [
-					new Machine(0, 0, 0, 0, 0)
-				];
-
-				let machines = Machine.parse(webpage);
-				machines.should.have.members(expected);
-			});
-
-			it('a whole web page', () => {
-				const webpage = `
-					<li>Hello</li>
-				`;
-				const expected = [
-					new Machine(0, 0, 0, 0, 0)
-				];
-
-				let machines = Machine.parse(webpage);
-				machines.should.have.members(expected);
-			});
-
-			it('404 (no machines)', () => {
-				const webpage = `
-					<h1>404 Error</h1>
-					<p>This webpage could not be found.</p>
-				`;
-				const expected = [];
-
-				let machines = Machine.parse(webpage);
-				machines.should.have.members(expected);
+			it('returns an empty array on an error', () => {
+				const page = read('../lib/error.html');
+				let machines = Machine.parse(page);
+				machines.should.have.members([]);
 			});
 		});
 	});

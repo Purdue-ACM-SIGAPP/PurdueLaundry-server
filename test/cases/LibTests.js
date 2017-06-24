@@ -2,10 +2,13 @@
 const scraper = require('../../server/lib/scraper');
 const {randomData, comprehensiveData} = require('../../server/lib/mock-data');
 const fs = require('fs');
+const path = require('path');
 const _ = require('lodash');
 // eslint-disable-next-line
 const should = require('chai').should();
 const nock = require('nock');
+
+const read = p => fs.readFileSync(path.resolve(__dirname, p));
 
 describe('lib', () => {
 	describe('mock-data', () => {
@@ -76,7 +79,7 @@ describe('lib', () => {
 				.persist()
 				.get(/.*/)
 				.query(true)
-				.reply(200, fs.readFileSync(`../lib/${url}.html`));
+				.reply(200, read(`../lib/${url}.html`));
 		}
 
 		/**
@@ -91,7 +94,7 @@ describe('lib', () => {
 		}
 
 		describe('scrapeLocations', () => {
-			const expected = JSON.parse(fs.readFileSync('../lib/locations.json', 'utf-8'));
+			const expected = JSON.parse(read('../lib/locations.json', 'utf-8'));
 			const tests = [
 				{name: 'can scrape just the locations', spy: 'just_locations'},
 				{name: 'can scrape locations with some HTML fluff', spy: 'locations_html_fluff'},
@@ -118,7 +121,7 @@ describe('lib', () => {
 				// nock('http://wpvitassuds01.itap.purdue.edu/')
 				// 	.get(/.*/)
 				// 	.query(true)
-				// 	.reply(200, fs.readFileSync('../lib/just_locations.html', 'utf-8'));
+				// 	.reply(200, read('../lib/just_locations.html', 'utf-8'));
 			});
 
 			it('can return a url for a valid location', async () => {
@@ -135,7 +138,7 @@ describe('lib', () => {
 		});
 
 		describe('scrapeAllMachines', () => {
-			const expected = JSON.parse(fs.readFileSync('../lib/machines.json', 'utf-8'));
+			const expected = JSON.parse(read('../lib/machines.json', 'utf-8'));
 			const tests = [
 				{name: 'just machines', spy: 'just_all_machines'},
 				{name: 'machines with fluff', spy: 'all_machines_fluff'},
@@ -157,7 +160,7 @@ describe('lib', () => {
 		});
 
 		describe('scrapeMachinesAt', () => {
-			const expected = fs.readFileSync('../lib/machines-cary.json');
+			const expected = read('../lib/machines-earhart.json');
 			const location = 'Cary Quad East Laundry';
 			const tests = [
 				{name: 'just machines', spy: 'just_machines'},
