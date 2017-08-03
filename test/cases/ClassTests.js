@@ -107,8 +107,8 @@ describe('Classes', () => {
 
 			tests.forEach(t => {
 				it(t.name, () => {
-					const actual = Machine.parse(read(`../lib/${t.page}.html`));
-					const expected = JSON.parse(read('../lib/machines-earhart.json'));
+					const actual = Machine.parse(read(`../lib/earhart/${t.page}.html`));
+					const expected = JSON.parse(read('../lib/expected/machines-earhart.json'));
 					actual.should.have.deep.members(expected);
 				});
 			});

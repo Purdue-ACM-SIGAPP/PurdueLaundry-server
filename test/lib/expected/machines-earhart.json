@@ -1,194 +1,226 @@
 [
 	{
+		"displayName": "Dryer 17",
 		"name": "Dryer 017",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 18",
 		"name": "Dryer 018",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 19",
 		"name": "Dryer 019",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 20",
 		"name": "Dryer 020",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 21",
 		"name": "Dryer 021",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 22",
 		"name": "Dryer 022",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 23",
 		"name": "Dryer 023",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 24",
 		"name": "Dryer 024",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 25",
 		"name": "Dryer 025",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 26",
 		"name": "Dryer 026",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 27",
 		"name": "Dryer 027",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 28",
 		"name": "Dryer 028",
 		"type": "Dryer",
 		"status": "Not online",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 29",
 		"name": "Dryer 029",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 30",
 		"name": "Dryer 030",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 31",
 		"name": "Dryer 031",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Dryer 32",
 		"name": "Dryer 032",
 		"type": "Dryer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 1",
 		"name": "Washer 001",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 2",
 		"name": "Washer 002",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 3",
 		"name": "Washer 003",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 4",
 		"name": "Washer 004",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 5",
 		"name": "Washer 005",
 		"type": "Washer",
 		"status": "Ready to start",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 6",
 		"name": "Washer 006",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 7",
 		"name": "Washer 007",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 8",
 		"name": "Washer 008",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 9",
 		"name": "Washer 009",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 10",
 		"name": "Washer 010",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 11",
 		"name": "Washer 011",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 12",
 		"name": "Washer 012",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 13",
 		"name": "Washer 013",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 14",
 		"name": "Washer 014",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 15",
 		"name": "Washer 015",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	},
 	{
+		"displayName": "Washer 16",
 		"name": "Washer 016",
 		"type": "Washer",
 		"status": "Available",
-		"time": " "
+		"time": " "
 	}
 ]
