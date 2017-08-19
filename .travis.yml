@@ -1,5 +1,5 @@
-language: javascript
-before_install: curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash && nvm install v7.9
+language: node_js
+node_js: "8.4"
 install: npm install
 script: npm test
 services:
