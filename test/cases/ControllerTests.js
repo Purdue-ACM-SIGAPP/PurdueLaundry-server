@@ -3,6 +3,7 @@
 const should = require('chai').should();
 const Machine = require('../../server/classes/Machine');
 const fs = require('fs');
+const path = require('path');
 
 describe('Controllers', () => {
 	/**
@@ -75,9 +76,9 @@ describe('Controllers', () => {
 		});
 
 		describe('getPossibleStatuses', () => {
-			it('is correct', async () => {
+			it('is correct', () => {
 				MachineController.getPossibleStatuses(req, res);
-				const expected = await fs.readFile('../lib/expected/statuses.json');
+				const expected = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../lib/expected/statuses.json')));
 
 				result.should.have.members(expected);
 			});
