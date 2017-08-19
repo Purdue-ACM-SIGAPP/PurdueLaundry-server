@@ -11,7 +11,7 @@
     "start:vanilla": "pm2 start processes.json --no-daemon",
     "test": "npm run mocha && npm run eslint",
     "mocha": "mocha test/cases/*",
-    "eslint": "node_modules/.bin/eslint server/* app.js"
+    "eslint": "node_modules/.bin/eslint server/*.js app.js"
   },
   "author": "Purdue ACM SigApp <acm@purdue.edu>",
   "license": "ISC",
