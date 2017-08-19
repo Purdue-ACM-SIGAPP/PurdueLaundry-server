@@ -2,6 +2,7 @@
 // eslint-disable-next-line
 const should = require('chai').should();
 const Machine = require('../../server/classes/Machine');
+const fs = require('fs');
 
 describe('Controllers', () => {
 	/**
@@ -74,11 +75,17 @@ describe('Controllers', () => {
 		});
 
 		describe('getPossibleStatuses', () => {
-			it('is correct', () => {
+			it('is correct', async () => {
 				MachineController.getPossibleStatuses(req, res);
-				const expected = ['Available', 'In Use', 'Almost Done', 'End of Cycle', 'Out of Order', 'Offline', 'Ready To Start'];
+				const expected = await fs.read('../lib/expected/statuses.json');
 
 				result.should.have.members(expected);
+			});
+		});
+
+		describe('getLocations', () => {
+			it('is correct', async () => {
+				// TODO: Test/mock
 			});
 		});
 	});

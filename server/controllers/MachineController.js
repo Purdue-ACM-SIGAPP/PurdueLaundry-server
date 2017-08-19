@@ -1,4 +1,4 @@
-const {scrapeAllMachines, scrapeMachinesAt, getUrlFor} = require('../lib/scraper');
+const {scrapeAllMachines, scrapeMachinesAt, getUrlFor, scrapeLocations} = require('../lib/scraper');
 
 async function getMachines(req, res) {
 	// Logging
@@ -28,11 +28,15 @@ async function getMachinesAtLocation(req, res) {
 	res.json(results);
 }
 
+async function getLocations(req, res) {
+	res.send(await scrapeLocations(req.redis));
+}
+
 function getPossibleStatuses(req, res) {
 	let status = ['Available', 'In Use', 'Almost Done', 'End of Cycle', 'Out of Order', 'Offline', 'Ready To Start'];
 	res.send(status);
 }
 
 module.exports = {
-	getMachines, getMachinesAtLocation, getPossibleStatuses
+	getMachines, getMachinesAtLocation, getPossibleStatuses, getLocations
 };
