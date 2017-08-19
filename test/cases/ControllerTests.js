@@ -86,7 +86,10 @@ describe('Controllers', () => {
 
 		describe('getLocations', () => {
 			it('is correct', async () => {
-				// TODO: Test/mock
+				await MachineController.getLocations(req, res);
+				const expected = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../lib/expected/locations.json')));
+
+				result.should.have.deep.members(expected);
 			});
 		});
 	});

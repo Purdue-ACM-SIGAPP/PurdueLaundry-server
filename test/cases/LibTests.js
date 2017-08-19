@@ -77,7 +77,7 @@ describe('lib', () => {
 		function setUpSpy(url) {
 			nock('http://wpvitassuds01.itap.purdue.edu/')
 				.get(/.*/)
-				.query(true)
+				.query(query => query !== '')
 				.reply(200, read(`../lib/${url}.html`));
 		}
 
@@ -143,8 +143,15 @@ describe('lib', () => {
 			});
 		});
 
-		xdescribe('scrapeMachinesAt', () => {
-			const expected = read('../lib/expected/machines-earhart.json');
+		describe('scrapeMachinesAt', () => {
+			beforeEach(() => {
+				nock('http://wpvitassuds01.itap.purdue.edu/')
+					.get(/.*/)
+					.query('')
+					.reply(200, read('../lib/locations/just_locations.html'));
+			});
+
+			const expected = JSON.parse(read('../lib/expected/machines-earhart.json'));
 			const location = 'Earhart Laundry Room';
 			const tests = [
 				{name: 'just machines', spy: 'earhart/just_machines'},
