@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const {scrapeAllMachines, scrapeMachinesAt, getUrlFor, scrapeLocations} = require('../lib/scraper');
 
 async function getMachines(req, res) {
@@ -32,11 +34,16 @@ async function getLocations(req, res) {
 	res.send(await scrapeLocations(req.redis));
 }
 
+async function getMachinesAtOldLocation(req, res) {
+	const locations = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../old_locations.json')));
+	res.send(locations[req.params.location]);
+}
+
 function getPossibleStatuses(req, res) {
 	let status = ['Available', 'In Use', 'Almost Done', 'End of Cycle', 'Out of Order', 'Offline', 'Ready To Start'];
 	res.send(status);
 }
 
 module.exports = {
-	getMachines, getMachinesAtLocation, getPossibleStatuses, getLocations
+	getMachines, getMachinesAtLocation, getPossibleStatuses, getLocations, getMachinesAtOldLocation
 };
