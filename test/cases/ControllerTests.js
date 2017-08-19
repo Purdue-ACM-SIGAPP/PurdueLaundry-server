@@ -77,7 +77,7 @@ describe('Controllers', () => {
 		describe('getPossibleStatuses', () => {
 			it('is correct', async () => {
 				MachineController.getPossibleStatuses(req, res);
-				const expected = await fs.read('../lib/expected/statuses.json');
+				const expected = await fs.readFile('../lib/expected/statuses.json');
 
 				result.should.have.members(expected);
 			});
