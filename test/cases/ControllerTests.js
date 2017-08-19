@@ -45,14 +45,14 @@ describe('Controllers', () => {
 			it('gets more than 1 location', async () => {
 				await MachineController.getMachines(req, res);
 				Object.keys(result).length.should.be.greaterThan(1);
-			}).timeout(5000);
+			}).timeout(10000);
 
 			it('returns Machine objects', async () => {
 				await MachineController.getMachines(req, res);
 				for (let i of Object.keys(result)) {
 					result[i].forEach(m => m.should.be.an.instanceOf(Machine));
 				}
-			}).timeout(5000);
+			}).timeout(10000);
 		});
 
 		describe('getMachinesAtLocation', () => {
@@ -70,7 +70,7 @@ describe('Controllers', () => {
 				for (let i of Object.keys(result)) {
 					result[i].forEach(m => m.should.be.an.instanceOf(Machine));
 				}
-			}).timeout(5000);
+			}).timeout(10000);
 		});
 
 		describe('getPossibleStatuses', () => {

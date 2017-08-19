@@ -15,7 +15,7 @@ describe('Classes', () => {
 
 		beforeEach(async () => {
 			const client = r.createClient();
-			await new Promise((resolve,) => client.flushdb(() => resolve()));
+			await new Promise((resolve) => client.flushdb(() => resolve()));
 			redis = new Redis(client);
 		});
 
@@ -29,7 +29,7 @@ describe('Classes', () => {
 		});
 
 		describe('get', () => {
-			beforeEach(async () => await new Promise((resolve,) => redis.redis.flushdb(() => resolve())));
+			beforeEach(async () => await new Promise((resolve) => redis.redis.flushdb(() => resolve())));
 
 			it('something stored', async () => {
 				redis.redis.set(key, value);
@@ -54,7 +54,7 @@ describe('Classes', () => {
 		});
 
 		describe('exists', () => {
-			beforeEach(async () => await new Promise((resolve,) => redis.redis.flushdb(() => resolve())));
+			beforeEach(async () => await new Promise((resolve) => redis.redis.flushdb(() => resolve())));
 
 			it('something stored', async () => {
 				redis.redis.set(key, value);
