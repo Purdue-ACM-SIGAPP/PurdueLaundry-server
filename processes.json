@@ -3,6 +3,7 @@
 		{
 			"name": "purdue-laundry-api",
 			"script": "./app.js",
+			"node_args": ["--inspect=5858"],
 			"merge_logs": true,
 			"max_restarts": 20,
 			"instances": 4,

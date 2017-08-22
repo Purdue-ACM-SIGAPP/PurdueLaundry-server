@@ -27,7 +27,7 @@ RUN apt-get install -y -q --no-install-recommends \
     && apt-get -y autoclean
 
 ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 6.9.4
+ENV NODE_VERSION 8.4
 
 # Install nvm with node and npm
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash \
@@ -54,8 +54,9 @@ RUN npm i -g pm2
 # Add application files
 ADD . /var/www/app/current
 
-#Expose the port
+# Expose the port
 EXPOSE 4500
+EXPOSE 5858
 
 CMD ["pm2", "start", "processes.json", "--no-daemon"]
 

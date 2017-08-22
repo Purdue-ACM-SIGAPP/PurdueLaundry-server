@@ -4,6 +4,7 @@ services:
     build: .
     ports:
      - "80:4500"
+     - "5858:5858"
     depends_on:
      - redis
   redis:
