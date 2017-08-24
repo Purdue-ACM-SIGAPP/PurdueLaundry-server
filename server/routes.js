@@ -90,10 +90,9 @@ module.exports = (app, redis) => {
 	/*
 	 * This is where the routes are declared. All results will automatically be cached for 1 minute.
 	 */
-	app.get('/v1/status', MachineController.getPossibleStatuses);
+	app.get('/v2/status', MachineController.getPossibleStatuses);
 	app.get('/v2/locations', MachineController.getLocations);
-	app.get('/v1/location/all', MachineController.getMachines);
-	app.get('/v1/location/:location', MachineController.getMachinesAtOldLocation);
+	app.get('/v2/location/all', MachineController.getMachines);
 	app.get('/v2/location/:location', MachineController.getMachinesAtLocation);
 	app.all('*', fourOhFour);
 };
