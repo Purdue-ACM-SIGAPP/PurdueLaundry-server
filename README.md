@@ -1,24 +1,86 @@
 # Purdue Laundry API
 
-Backend for the Purdue Laundry application. It scrapes data from the Purdue Laundry alert page and provides a nice API for accessing it from the app. 
+This is a backend for the Purdue Laundry application. It scrapes 
+data from the Purdue Laundry alert page and provides a nice API 
+for accessing it from the app. 
 
+# Running the Server with Docker
 
-## Contributing
+Our server is Dockerized, so running it will require you to install
+`docker` and `docker-compose`. Refer to the [docker documentation](https://docs.docker.com/compose/install/)
+for instructions on how to do that. It's fairly well documented
+and painless. 
 
-Anyone is free to contribute to this server. However attention should be paid to the PurdueLaundry Application for compatability with API changes. 
+Once you have those 2 dependencies installed, you can install dependencies and build and run
+the server by simply running:
 
-`master` represents the API as currently deployed to `laundry-api.sigapp.club`. Updates to this should mirror a redeploy of the server. Do not commit to master directly. Do not merge into master without approval. 
+    $ yarn
+    $ yarn start
+    
+**If you are running Ubuntu:** there are special instructions that
+you need to install Docker. Look to `install-docker-ubuntu.sh` for those instructions.
+    
+# Running the Server without Docker
 
-`dev` represents the current state of the server. Updates to `dev` should be relatively stable and tested. 
+That said, it is possible to run the server *without* using Docker;
+it's just more difficult since you'll have to worry about dependencies. 
 
-### Issues
+First, do the following:
+- Install a version of Node.js that supports `async`/`await`
+	- If you have an older version already installed, I suggest
+	moving to `nvm` (Node Version Manager). It makes using
+	different versions of Node easy, and the version
+	on `apt-get` is out of date anyway.
+- Run `npm i --production` (This installs every non-dev dependency)
+- Run `sudo npm i -g pm2` (We use pm2 to run our server)
 
-If you are insterested in contributing to this repo, please assign an issue to yourself to claim it. This is important so that we do not do double work, and so that we have a way of discussing changes in an open forum. 
+Once those things are installed, just run:
 
-## Deploying
+    $ yarn run start-vanilla
+    
+***Important:*** This method of running the server will not be
+supported. There are a lot of dependencies for this project
+and they could all be affected by other parts of your machine,
+making this use case very difficult to debug. We will try our best
+to keep this list of dependencies accurate to our `Dockerfile`,
+but if this does not work, you're going to have to try to fix it
+yourself or just install Docker. Sorry.
 
-Deploying is currently managed by Sigapp officers and hosted on an AWS EC2 instance. Deployments will happen periodically in line with changes to the Android app. 
+# Testing
 
-## License
+To run all tests, simply run:
 
-This API is licensed under GPLv3. 
+    $ yarn test
+
+A summary of the tests will be displayed in `stdout`. 
+
+To write new tests, refer to the [Jasmine documentation](https://jasmine.github.io/edge/node.html).
+Additionally, testing involves linting the code according to the
+standards in `.eslintrc.json`, so make sure your code is well
+formatted to pass all the tests.
+
+The Jasmine tests are relatively well organized. `test/data` should
+hold any mock data that you want to pass into your functions.
+`test/helpers` holds any custom matchers that your tests will need.
+There should be 1 matcher for every class in the `server/classes`
+folder. 
+
+Finally, `test/cases` holds the actual test cases. There
+is 1 file for every folder in `server`, and in each file, Jasmine
+makes it easy to further `describe` one suite for each file in that
+folder. Furthermore, you should `describe` multiple situations for
+each file, then use `it` to write 1 or many tests for each situation.
+
+I know that was very confusing, and I very am sorry. It will likely
+make more sense when you look at the files and run them to see 
+what they output.
+
+# Deploying
+
+Deploying is currently managed by SigApp officers and hosted on
+an AWS ECS instance. Deployments will happen periodically in 
+line with changes to the Android app. 
+
+# License
+
+This API is licensed under GPLv3 and can be viewed in `LICENSE`.

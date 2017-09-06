@@ -1,0 +1,17 @@
+{
+	"apps": [
+		{
+			"name": "purdue-laundry-api",
+			"script": "./app.js",
+			"node_args": ["--inspect=5858"],
+			"merge_logs": true,
+			"max_restarts": 20,
+			"instances": 4,
+			"max_memory_restart": "200M",
+			"env": {
+				"PORT": 4500,
+				"NODE_ENV": "production"
+			}
+		}
+	]
+}
