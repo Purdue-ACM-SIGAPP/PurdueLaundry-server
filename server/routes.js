@@ -27,11 +27,11 @@ module.exports = (app, redis) => {
 
 		let exists = await redis.exists(req.path);
 		if (exists) {
-			req.logger.info(`Result for route ${req.route} was in the cache`);
+			req.logger.info(`Result for route ${req.path} was in the cache`);
 			let result = await redis.get(req.path);
 			res.send(JSON.parse(result));
 		} else {
-			req.logger.info(`Result for route ${req.route} was not in the cache`);
+			req.logger.info(`Result for route ${req.path} was not in the cache`);
 			next();
 		}
 	}
@@ -47,7 +47,7 @@ module.exports = (app, redis) => {
 			// todo time tracking
 
 			redis.redis.set(req.path, JSON.stringify(data));
-			redis.redis.expire(req.path, 1000 * 60);
+			redis.redis.expire(req.path, 60);
 			res.oldSend(data);
 		};
 
