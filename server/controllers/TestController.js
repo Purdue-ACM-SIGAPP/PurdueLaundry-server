@@ -12,6 +12,12 @@ async function getMachines(req, res) {
 	res.json(machines);
 }
 
+async function getMachinesAtLocation(req, res) {
+	// Logging
+	req.logger.info({type: 'GET', location: req.params.location});
+	res.json(randomData());
+}
+
 async function getLocations(req, res) {
 	const locations = [
 		'Lorem ipsum', 'dolor sit', 'amet consectetur',
@@ -29,5 +35,5 @@ function getPossibleStatuses(req, res) {
 }
 
 module.exports = {
-	getMachines, getPossibleStatuses, getLocations
+	getMachines, getMachinesAtLocation, getPossibleStatuses, getLocations
 };

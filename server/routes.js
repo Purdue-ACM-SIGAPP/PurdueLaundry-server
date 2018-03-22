@@ -99,6 +99,7 @@ module.exports = (app, redis) => {
 	app.get('/v2:debug/status', TestController.getPossibleStatuses);
 	app.get('/v2:debug/locations', TestController.getLocations);
 	app.get('/v2:debug/location/all', TestController.getMachines);
+	app.get('/v2:debug/location/:location', TestController.getMachinesAtLocation);
 
 	app.all('*', fourOhFour);
 };
