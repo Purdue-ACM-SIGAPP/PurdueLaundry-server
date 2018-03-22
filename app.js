@@ -43,7 +43,6 @@ const logger = log4js.getLogger('purdue-laundry');
 // Provide caching and logging to controllers
 app.use((req, res, next) => {
 	req.logger = logger;
-	req.redis = r;
 	// req.stats = stats;
 	next();
 });
