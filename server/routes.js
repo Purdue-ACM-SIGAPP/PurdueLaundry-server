@@ -1,4 +1,5 @@
 const MachineController = require('./controllers/MachineController');
+const TestController = require('./controllers/TestController');
 
 module.exports = (app, redis) => {
 	/***********
@@ -94,5 +95,10 @@ module.exports = (app, redis) => {
 	app.get('/v2/locations', MachineController.getLocations);
 	app.get('/v2/location/all', MachineController.getMachines);
 	app.get('/v2/location/:location', MachineController.getMachinesAtLocation);
+
+	app.get('/v2:debug/status', TestController.getPossibleStatuses);
+	app.get('/v2:debug/locations', TestController.getLocations);
+	app.get('/v2:debug/location/all', TestController.getMachines);
+
 	app.all('*', fourOhFour);
 };
