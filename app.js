@@ -7,6 +7,7 @@ app.set('port', (process.env.PORT || 5000));
 const redis = require('redis');
 const redisOptions = {
 	host: 'redis',
+	db: 1,
 	port: 6379,
 	total_retry_time: 300000
 };
