@@ -3,6 +3,7 @@ var app = express();
 var redis = require("redis");
 var redisOptions = {
   host:'redis',
+  db: 0,
   port:6379,
   total_retry_time:300000
 };
