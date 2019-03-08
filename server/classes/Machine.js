@@ -57,7 +57,9 @@ class Machine {
 
 		// Loop through the table rows of the HTML
 		Array.from($('tr')).forEach(function (machine) {
-			if (!$(machine).attr('class') && !results[location]) {
+			if (!$(machine).attr('class')) {
+				if (!$('a', machine)[0] || $('a', machine)[0].children[0].data.includes('©')) return;
+
 				location = $('a', machine)[0].children[0].data;
 				results[location] = [];
 			} else {
