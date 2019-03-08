@@ -20,6 +20,7 @@ client.on('connect', () => {
 });
 const Redis = require('./server/classes/Redis');
 let r = new Redis(client);
+module.exports = {redis: r};
 
 // Initialize logger
 const log4js = require('log4js');
