@@ -1,6 +1,7 @@
 const cheerio = require('cheerio');
 const request = require('request-promise');
 const parseHtml = require('../classes/Machine').parse;
+const parseHtmlAll = require('../classes/Machine').parseAll;
 
 /**
  * This function scrapes a list of all of the available laundry rooms. It returns an array of objects
@@ -35,21 +36,9 @@ async function getUrlFor(location) {
  * This method simply scrapes the locations, then goes through every one of them, scraping the machines on each page
  */
 async function scrapeAllMachines() {
-	// Initialize variables
-	let machines = {};
-	let locations = await scrapeLocations();
-
-	// Scrape machines of every location
-	for (let location of locations) {
-		// Get page contents
-		let url = location.url;
-		let body = await request(url);
-
-		// Use our fancy parsing function
-		machines[location.name] = parseHtml(body);
-	}
-
-	return machines;
+	const url = 'http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx';
+	const body = await request(url);
+	return parseHtmlAll(body);
 }
 
 /**
