@@ -48,6 +48,33 @@ class Machine {
 
 		return results;
 	}
+
+	static parseAll(body) {
+		// Initialize variables
+		let results = {};
+		let $ = cheerio.load(body);
+		let location = '';
+
+		// Loop through the table rows of the HTML
+		Array.from($('tr')).forEach(function (machine) {
+			if (!$(machine).attr('class') && !results[location]) {
+				location = $('a', machine)[0].children[0].data;
+				results[location] = [];
+			} else {
+				// Extract the details we want from the HTML
+				let name = $('.name', machine).text();
+				let displayName = $('.name', machine).text().replace(/0+([1-9]+)/, '$1');
+				let type = $('.type', machine).text();
+				let status = $('.status', machine).text();
+				let time = $('.time', machine).text();
+
+				// Assuming this machine has a type, push it in end of the array
+				if (type !== '') results[location].push(new Machine(name, displayName, type, status, time));
+			}
+		});
+
+		return results;
+	}
 }
 
 module.exports = Machine;
