@@ -2,12 +2,15 @@ const cheerio = require('cheerio');
 const request = require('request-promise');
 const parseHtml = require('../classes/Machine').parse;
 const parseHtmlAll = require('../classes/Machine').parseAll;
+const redis = require('../../app').redis;
 
 /**
  * This function scrapes a list of all of the available laundry rooms. It returns an array of objects
  * specifying both the name and full url of each room
  */
 async function scrapeLocations() {
+	if (await redis.exists('locations')) return JSON.parse(await redis.get('locations'));
+
 	// Initialize variables
 	const url = 'http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx';
 
@@ -16,10 +19,13 @@ async function scrapeLocations() {
 	let $ = cheerio.load(html);
 
 	// Turn the `select` options into a fancy array
-	return Array.from($('#locationSelector').find('option')).map(e => ({
+	let res = Array.from($('#locationSelector').find('option')).map(e => ({
 		'name': e.children[0].data,
 		'url': url + '?location=' + e.attribs.value
 	}));
+	redis.redis.set('locations', JSON.stringify(res));
+
+	return res;
 }
 
 /**

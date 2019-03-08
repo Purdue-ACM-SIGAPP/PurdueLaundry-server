@@ -6,7 +6,7 @@ app.set('port', (process.env.PORT || 5000));
 // Initialize cache
 const redis = require('redis');
 const redisOptions = {
-	host: 'redis',
+	host: 'localhost',
 	db: 1,
 	port: 6379,
 	total_retry_time: 300000
@@ -20,6 +20,7 @@ client.on('connect', () => {
 });
 const Redis = require('./server/classes/Redis');
 let r = new Redis(client);
+module.exports = {redis: r};
 
 // Initialize logger
 const log4js = require('log4js');
