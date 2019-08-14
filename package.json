@@ -5,9 +5,9 @@
   "main": "index.js",
   "repository": "https://github.com/purdue-acm-sigapp",
   "scripts": {
-    "build": "docker-compose build",
-    "start": "docker-compose up",
-    "stop": "docker-compose down",
+    "build": "docker build -t purdue-laundry-v2:latest .",
+    "start": "docker run --rm purdue-laundry-v2:latest",
+    "stop": "docker stop $(docker ps -a | grep \"purdue-laundry-v2:latest\" | awk '{print $1}')",
     "start:vanilla": "pm2 start processes.json --no-daemon",
     "test": "npm run mocha && npm run eslint",
     "mocha": "mocha test/cases/*",
