@@ -5,9 +5,9 @@
   "main": "index.js",
   "repository": "https://github.com/purdue-acm-sigapp",
   "scripts": {
-    "build": "docker build -t purdue-laundry-v2:latest .",
-    "start": "docker run --rm --env REDIS_HOST=localhost -p 0.0.0.0:4502:5000 purdue-laundry-v2:latest",
-    "stop": "docker stop $(docker ps -a | grep \"purdue-laundry-v2:latest\" | awk '{print $1}')",
+    "build": "docker-compose build",
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down",
     "start:vanilla": "pm2 start processes.json --no-daemon",
     "test": "npm run mocha && npm run eslint",
     "mocha": "mocha test/cases/*",
