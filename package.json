@@ -5,9 +5,9 @@
   "main": "index.js",
   "repository": "https://github.com/purdue-acm-sigapp",
   "scripts": {
-    "build": "docker-compose build",
-    "start": "docker-compose up",
-    "stop": "docker-compose down",
+    "build": "docker build -t purdue-laundry-v2:latest .",
+    "start": "docker run --rm --env REDIS_HOST=localhost -p 0.0.0.0:4502:5000 purdue-laundry-v2:latest",
+    "stop": "docker stop $(docker ps -a | grep \"purdue-laundry-v2:latest\" | awk '{print $1}')",
     "start:vanilla": "pm2 start processes.json --no-daemon",
     "test": "npm run mocha && npm run eslint",
     "mocha": "mocha test/cases/*",
@@ -16,24 +16,23 @@
   "author": "Purdue ACM SigApp <acm@purdue.edu>",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.13.3",
-    "chai": "^4.0.2",
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
     "cheerio": "^1.0.0-rc.2",
     "dogstatsd-node": "0.0.1",
-    "express": "^4.13.3",
-    "log4js": "^0.6.32",
-    "loggly": "^1.1.0",
-    "mocha": "^3.4.2",
-    "moment": "^2.10.6",
-    "nock": "^9.0.13",
-    "redis": "^2.4.2",
-    "request": "latest",
-    "request-promise": "^4.2.0"
+    "express": "^4.17.1",
+    "log4js": "^5.0.0",
+    "mocha": "^6.2.0",
+    "moment": "^2.24.0",
+    "nock": "^10.0.6",
+    "redis": "^2.8.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   },
   "devDependencies": {
-    "eslint": "^4.0.0",
-    "jasmine": "^2.6.0",
-    "jasmine-spec-reporter": "^4.0.0",
-    "lodash": "latest"
+    "eslint": "^6.1.0",
+    "jasmine": "^3.4.0",
+    "jasmine-spec-reporter": "^4.2.1",
+    "lodash": "^4.17.15"
   }
 }

@@ -27,7 +27,9 @@ RUN apt-get install -y -q --no-install-recommends \
     && apt-get -y autoclean
 
 ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 7.9.0
+ENV NODE_VERSION 8.16.0
+# Move redis host to environment variable to easily switch between redis in docker and redis native
+ENV REDIS_HOST localhost
 
 # Install nvm with node and npm
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash \
