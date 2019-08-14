@@ -25,6 +25,7 @@ module.exports = {redis: r};
 // Initialize logger
 const log4js = require('log4js');
 log4js.configure({
+	pm2: true,
 	appenders: {
 		out: {
 			type: 'console',
