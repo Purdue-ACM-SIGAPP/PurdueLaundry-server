@@ -52,6 +52,8 @@ RUN npm i --production
 
 # Install pm2 so we can run our application
 RUN npm i -g pm2
+# Install pm2-intercom for log4js
+RUN pm2 install pm2-intercom
 
 # Add application files
 ADD . /var/www/app/current
