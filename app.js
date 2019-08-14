@@ -6,7 +6,7 @@ app.set('port', (process.env.PORT || 5000));
 // Initialize cache
 const redis = require('redis');
 const redisOptions = {
-	host: 'redis',
+	host: 'localhost',
 	db: 1,
 	port: 6379,
 	total_retry_time: 300000
@@ -25,20 +25,25 @@ module.exports = {redis: r};
 // Initialize logger
 const log4js = require('log4js');
 log4js.configure({
-	'appenders': [
-		{
+	appenders: {
+		out: {
 			type: 'console',
 			category: 'purdue-laundry'
 		},
-		{
-			type: 'loggly',
-			token: '5ac059d3-1b8c-4e5e-9059-0b6b080b3fee',
-			subdomain: 'purduesigapp',
-			tags: ['purdue-laundry'],
-			category: 'purdue-laundry',
-			json: true
-		},
-	]
+		// Commenting out loggly stuff since it doesn't work and I have no idea what loggly account it goes to
+		//loggly: {
+		//	type: 'loggly',
+		//	token: '5ac059d3-1b8c-4e5e-9059-0b6b080b3fee',
+		//	subdomain: 'purduesigapp',
+		//	tags: ['purdue-laundry'],
+		//	category: 'purdue-laundry',
+		//	json: true
+		//},
+	},
+	categories: {
+		default: { appenders: [ 'out' ], level: 'info' },
+		//loggly: { appenders: ['loggly'], level: 'info'}
+	}
 });
 const logger = log4js.getLogger('purdue-laundry');
 
