@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  laundry:
+    build: .
+    environment:
+      REDIS_HOST: 'redis'
+    ports:
+      - "4502:80"
+    depends_on:
+      - redis
+    deploy:
+      restart_policy:
+        condition: on-failure
+  redis:
+    image: redis
+    deploy:
+      restart_policy:
+        condition: on-failure
