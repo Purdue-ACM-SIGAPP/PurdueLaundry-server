@@ -6,7 +6,7 @@
   "repository": "https://github.com/purdue-acm-sigapp",
   "scripts": {
     "build": "docker build -t purdue-laundry-v2:latest .",
-    "start": "docker run --rm --env REDIS_HOST=localhost purdue-laundry-v2:latest",
+    "start": "docker run --rm --env REDIS_HOST=localhost -p 0.0.0.0:4502:5000 purdue-laundry-v2:latest",
     "stop": "docker stop $(docker ps -a | grep \"purdue-laundry-v2:latest\" | awk '{print $1}')",
     "start:vanilla": "pm2 start processes.json --no-daemon",
     "test": "npm run mocha && npm run eslint",
@@ -22,7 +22,6 @@
     "dogstatsd-node": "0.0.1",
     "express": "^4.17.1",
     "log4js": "^5.0.0",
-    "loggly": "^1.1.1",
     "mocha": "^6.2.0",
     "moment": "^2.24.0",
     "nock": "^10.0.6",
