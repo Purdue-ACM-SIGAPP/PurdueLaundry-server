@@ -2,6 +2,7 @@ version: '3.7'
 services:
   laundry:
     build: .
+    image: registry.dev.sigapp.club/laundry/laundry-v2:latest
     environment:
       REDIS_HOST: 'redis'
     ports:
@@ -9,8 +10,14 @@ services:
     depends_on:
       - redis
     deploy:
+      replicas: 2
+      update_config:
+        delay: 1m
       restart_policy:
         condition: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "localhost:4502/v2/status"]
+      start_period: 30s
   redis:
     image: redis
     deploy:
