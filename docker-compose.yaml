@@ -3,6 +3,7 @@ services:
   laundry:
     build: .
     image: registry.dev.sigapp.club/laundry/laundry-v2:latest
+    restart: on-failure
     environment:
       REDIS_HOST: 'redis'
     ports:
@@ -20,6 +21,7 @@ services:
       start_period: 30s
   redis:
     image: redis
+    restart: on-failure
     deploy:
       restart_policy:
         condition: on-failure
