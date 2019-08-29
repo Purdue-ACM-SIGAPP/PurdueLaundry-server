@@ -2,7 +2,7 @@ version: '3.7'
 services:
   laundry:
     build: .
-    image: registry.dev.sigapp.club/laundry/laundry-v2:latest
+    image: purdueacmsigapp/laundry-v2:latest
     restart: on-failure
     environment:
       REDIS_HOST: 'redis'
